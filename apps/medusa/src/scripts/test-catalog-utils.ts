@@ -141,10 +141,11 @@ export default async function testCatalogUtils({ container }: ExecArgs) {
   )
 
   logger.info("=== generateSku ===")
-  expect("hook BARE sku", generateSku({ category: "hook", catalogNumber: "Z/016", variantCode: "BARE" }), "Z/016-BARE")
-  expect("hook M13 sku", generateSku({ category: "hook", catalogNumber: "Z/016", variantCode: "M13" }), "Z/016-M13")
+  expect("hook BARE sku", generateSku({ category: "hook", catalogNumber: "Z/016", variantCode: "BARE", generationCode: "octavia-3" }), "Z/016-octavia-3-BARE")
+  expect("hook M13 sku", generateSku({ category: "hook", catalogNumber: "Z/016", variantCode: "M13", generationCode: "octavia-3" }), "Z/016-octavia-3-M13")
   expect("bike_rack sku", generateSku({ category: "bike_rack", catalogNumber: "BR-2024-01" }), "BR-2024-01")
-  expect("standalone sku", generateSku({ category: "standalone_wiring", catalogNumber: "MOD-13-UNI-01" }), "MOD-13-UNI-01")
+  expect("standalone universal sku", generateSku({ category: "standalone_wiring", catalogNumber: "MOD-13-UNI-01" }), "MOD-13-UNI-01")
+  expect("standalone per-gen sku", generateSku({ category: "standalone_wiring", catalogNumber: "W-7-SK", generationCode: "octavia-3" }), "W-7-SK-octavia-3")
 
   logger.info("=== generateProductHandle ===")
   expect(
