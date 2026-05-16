@@ -1,0 +1,20 @@
+{
+  "name": "zahakowani",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Zahakowani — sklep z akcesoriami motoryzacyjnymi (Medusa v2 + Next.js)",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:ps": "docker compose ps"
+  }
+}
