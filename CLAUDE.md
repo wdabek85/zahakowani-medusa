@@ -21,15 +21,17 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 | Etap | Stan |
 |---|---|
 | Faza 0 — decyzje strategiczne | ✅ zamknięta |
-| **Etap 0.1 — setup monorepo + Docker + GitHub** | ✅ **zamknięty** |
-| **Faza 1 — backend Medusy (brief #1)** | ⏳ **TERAZ — czeka na start iteracji 1** |
-| Faza 2 — Admin UI (brief #2, nie napisany) | 🔒 |
+| Etap 0.1 — setup monorepo + Docker + GitHub | ✅ zamknięty |
+| **Faza 1 — backend Medusy (brief #1)** | ✅ **ZAKOŃCZONA** |
+| **Faza 2 — Admin UI (brief #2, do napisania)** | ⏳ **NASTĘPNA** |
 | Faza 3 — Frontend Next.js (brief #3, nie napisany) | 🔒 |
 | Faza 4 — Integracje (płatności, kurier, faktury) | 🔒 |
 | Faza 5 — Content, SEO, launch | 🔒 |
 | Faza 6 — V1 (priorytet 1: B2B portal z progami rabatowymi) | 🔒 |
 
-**Następny krok:** Faza 1, iteracja 1 — moduł `vehicle_fitment` (Brand, VehicleModel, Generation). Patrz `docs/briefs/medusa-brief.md` sekcja 1.
+**Kamień milowy Fazy 1 osiągnięty:** `npx medusa exec ./src/scripts/test-workflows.ts` tworzy 3 produkty (Hak Skoda Octavia 3 z 5 wariantami, Bagażnik testowy z 1, Moduł uniwersalny z 1) widoczne w `/app`.
+
+**Następny krok:** czekamy na brief #2 (admin UI) — user napisze przed kontynuacją.
 
 ---
 
@@ -191,17 +193,43 @@ Etap 0.1 zamknięty w 3 commitach. Aktualny stan repo:
 
 ---
 
-## Co dalej — Faza 1, iteracja 1: moduł `vehicle_fitment`
+## Faza 1 — 13 iteracji zamkniętych
 
-**Plan:**
-1. `src/modules/vehicle-fitment/` z modelami `Brand`, `VehicleModel`, `Generation` (pola w `docs/briefs/medusa-brief.md` §1)
-2. Service `VehicleFitmentService` z metodami list / retrieve / getModelsByBrand / getGenerationsByModel
-3. Pola wyliczane (helpery w serwisie): `years_label`, `full_name`, `url_slug`
-4. Migracja przez `npx medusa db:generate vehicleFitment`
-5. Test: `npx medusa db:migrate` przechodzi + utworzenie ręczne 1 Brand/Model/Generation przez `npx medusa exec` żeby sprawdzić schemę
-6. Commit `[FAZA-1] modul vehicle_fitment: Brand, VehicleModel, Generation`
+| # | Iteracja | Pliki | Commit |
+|---|---|---|---|
+| 1 | `vehicle_fitment` (Brand/VehicleModel/Generation + helpery) | `src/modules/vehicle-fitment/` | `3a49a75` |
+| 2 | `hook_catalog` (Hook, 18 pól) | `src/modules/hook-catalog/` | `90dec58` |
+| 3 | `wiring_equipment` + seed 4 rekordów (W7/W13/M7/M13) | `src/modules/wiring-equipment/`, `src/migration-scripts/seed-wiring-equipment.ts` | `871aee0` |
+| 4 | `bike_rack_catalog` (BikeRack, 20 pól) | `src/modules/bike-rack-catalog/` | `7c1a09a` |
+| 5 | `standalone_wiring_catalog` (z `fits_all_vehicles`) | `src/modules/standalone-wiring-catalog/` | `e48b1eb` |
+| 6 | 5 Module Links | `src/links/` | `970fbad` |
+| 7 | Shared utilities (4 generatory: title/variant/SKU/handle) | `src/utils/catalog/` | `bab0d55` |
+| 8 | `createProductFromHook` workflow | `src/workflows/create-product-from-hook.ts` | `1aafa45` |
+| 9 | `createProductFromBikeRack` + `createProductFromStandaloneWiring` | `src/workflows/create-product-from-{bike-rack,standalone-wiring}.ts` | `ef31044` |
+| 10 | 5 endpointów vehicle-fitment + cross-category | `src/api/store/vehicle-fitment/`, `src/api/store/products/by-vehicle/` | `5d3bb82` |
+| 11 | 6 endpointów listing + SEO landing | `src/api/store/categories/`, `src/api/store/landing/` | `295f7cc` |
+| 12 | Indexy Postgres | (w modelach od iteracji 1-5 + auto na link tables) | — |
+| 13 | Seed test catalog + `test-workflows.ts` (milestone) | `src/migration-scripts/seed-test-catalog-data.ts`, `src/scripts/test-workflows.ts` | `6b0f51a` |
 
-Po tym → iteracja 2 (moduł `hook_catalog`), zgodnie z `docs/roadmapa.md` Faza 1.
+**Decyzje techniczne podjęte w trakcie (warto wiedzieć dla Fazy 2):**
+
+1. **SKU dla hooks zawiera generation code** (`{catalog}-{generation_code}-{variant_code}`, np. `Z/016-octavia-3-M13`) — Medusa wymusza globalny `UNIQUE` na `product_variant.sku`, bez generation code SKU duplikowały się gdy Hook fituje wiele generacji. To **rozszerzenie** brief §8.
+
+2. **`pin_count` jako `number`, `power_socket`/`type` jako `text` zamiast `enum`** — GraphQL enum values muszą być valid identifiers (a `"7-pin"` / `"7"` nie są). Walidacja allowed values pójdzie do Zod na endpointach (Faza 2).
+
+3. **`weight_kg` jako integer** (Medusa `model.number()` → PG `integer`). W seed wiring_equipment 1.5kg zaokrąglone do 2. Refactor na `model.bigNumber()` lub numeric column dopiero gdy precyzja decimal okaże się prod-critical.
+
+4. **ProductVariant↔WiringEquipment NIE jest realnym Module Link** w Medusa 2.15.2 — `link.create` rzuca `"Cannot create multiple links between 'product' and 'wiring_equipment'"` (Medusa nie rozróżnia Product vs ProductVariant w `product` service przy multi-record batch). Workaround: `wiring_equipment_id` + `wiring_equipment_code` zapisywane w `variant.metadata`. Plik `src/links/variant-wiring-equipment.ts` zostawiony (tabela link istnieje), gotowy do wpięcia gdy Medusa naprawi quirk lub przy upgrade v2.16+.
+
+5. **M:N Module Link wymaga `isList: true` na OBU stronach `defineLink`** — bez tego `product.generations` działa, ale `generation.products` rzuca `"Entity 'Generation' does not have property 'products'"`. Naprawione w `src/links/product-generation.ts`.
+
+6. **`query.graph` z głębokimi nested links przez products** (np. `brand.models.generations.products.id`) rzuca `"Cannot read properties of undefined (reading 'strategy')"`. Workaround: rozdzielić na 2 query (entity-level + generation-level z `.products`) i agregować w JS.
+
+7. **Filtr `products` po linkowanej encji** (np. `filters: { generations: { id }}`) nie działa w 2.15.2. Workaround: query od strony Generation (lub odpowiedniej encji link-source) i pobranie products po liście ID.
+
+## Co dalej
+
+Faza 2 (Admin UI) — czekamy na **brief #2** od usera. Po jego wrzuceniu do `docs/briefs/admin-ui-brief.md`, kontynuujemy iteracyjnie sekcję po sekcji.
 
 ---
 
