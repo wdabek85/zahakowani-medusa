@@ -17,5 +17,8 @@ module.exports = defineConfig({
     {
       resolve: "./src/modules/vehicle-fitment",
     },
+    {
+      resolve: "./src/modules/hook-catalog",
+    },
   ],
 })
