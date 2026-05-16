@@ -8,7 +8,9 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-zahakowani_dev}
       POSTGRES_DB: ${POSTGRES_DB:-zahakowani}
     ports:
-      - "5432:5432"
+      # Mapowanie na 55432 zamiast 5432, bo na hoście jest już
+      # lokalny Postgres innego projektu który zajmuje 5432.
+      - "55432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:

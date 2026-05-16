@@ -57,6 +57,11 @@ npm run docker:ps
 
 Powinieneś zobaczyć dwa kontenery `zahakowani-postgres` i `zahakowani-redis` w statusie `healthy`.
 
+> **Uwaga o portach:** Postgres jest wystawiony na hoście na porcie **`55432`** (a nie domyślnym `5432`),
+> żeby nie kolidować z innym lokalnym Postgresem zainstalowanym natywnie na maszynie.
+> Wewnątrz kontenera Postgres słucha na `5432`. Z perspektywy aplikacji łączącej się z hosta
+> używaj `localhost:55432`. Redis bez zmian na `6379`.
+
 ### 4. Zainstaluj zależności
 
 ```bash
