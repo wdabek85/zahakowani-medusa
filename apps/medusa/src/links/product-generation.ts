@@ -16,7 +16,10 @@ import { defineLink } from "@medusajs/framework/utils"
  * (`GET /store/products/by-vehicle/:generationId`, brief §10).
  */
 export default defineLink(
-  ProductModule.linkable.product,
+  {
+    linkable: ProductModule.linkable.product,
+    isList: true,
+  },
   {
     linkable: VehicleFitmentModule.linkable.generation,
     isList: true,
