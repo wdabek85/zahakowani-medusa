@@ -717,7 +717,111 @@ Brak OAuth / social login w MVP. Można dodać w V1 jeśli będzie potrzeba.
 
 ---
 
-## 26. Logger (Pino przez Medusę)
+## 26. Znane quirks Medusy 2.15.2 (z Fazy 1)
+
+Te zachowania zostały odkryte w Fazie 1 i są **stałym kontekstem dla wszystkich kolejnych faz.** CC musi o nich pamiętać przy implementacji UI, frontu i integracji.
+
+### 29.1. Variant ↔ Custom Module link
+
+**Problem:** `link.create()` rzuca `"Cannot create multiple links between 'product' and 'X'"` przy próbie linkowania `ProductVariant` z custom modułem (np. `WiringEquipment`). Bug w Medusa 2.15.2 — link service nie rozróżnia Product vs ProductVariant pod tym samym `serviceName: "product"`.
+
+**Workaround:** Dane zapisywane w `variant.metadata` jako jsonb. Konkretnie dla haka:
+```ts
+variant.metadata = {
+  wiring_equipment_id: "we_xxx",
+  wiring_equipment_code: "M13"
+}
+```
+
+**Konsekwencje:**
+- Admin UI czyta `variant.metadata.wiring_equipment_id` żeby pokazać który moduł jest powiązany
+- Frontend renderuje galerię/spec wariantu z `variant.metadata.wiring_equipment_id`
+- Brak natywnego query Medusa po linku — trzeba albo indexować jsonb (GIN), albo joinować w aplikacji
+
+**Plan:** sprawdzić Medusa 2.16+ przy upgrade, wpiąć prawdziwy link gdy bug naprawiony.
+
+### 29.2. Module Link M:N — `isList: true` po obu stronach
+
+**Pułapka:** definiując link M:N (np. `Product ↔ Generation`), `isList: true` musi być **na obu linkable'ach**, nie tylko po jednej stronie. Bez tego query w jedną stronę działa, w drugą rzuca `"Entity X does not have property Y"`.
+
+**Reguła:** każdy nowy link M:N → `isList: true` po obu stronach.
+
+### 29.3. Enum tylko dla valid identifiers
+
+**Problem:** `model.enum(["7", "13"])` lub `model.enum(["7-pin", "13-pin"])` rzuca błąd GraphQL — enum values muszą być valid identifiers (litera na początku, bez myślników).
+
+**Reguła:**
+- Pola które są enum z "ludzkimi" wartościami → `model.text()` + walidacja Zod na poziomie endpointu
+- Pola które są enum z valid identifiers (np. `"harness" | "module"`) → `model.enum([...])`
+
+### 29.4. `model.number()` = integer, nie float
+
+**Problem:** `model.number()` w Medusa 2.15.2 mapuje na PG `integer`. Brak natywnej opcji float/decimal.
+
+**Reguła:**
+- Wartości całkowite (kg, ilość) → `model.number()` OK
+- Wartości dziesiętne (cena, waga z gramami) → ostrożnie:
+  - Cena: użyj `model.bigNumber()` (built-in dla pieniędzy)
+  - Inne dziesiętne: integer × 100 i dzielenie na froncie, albo refactor do `model.text()` z parsowaniem
+
+### 29.5. Single-variant produkt wymaga ProductOption
+
+**Problem:** Medusa core `createProductsWorkflow` rzuca `"Product options are not provided"` nawet dla produktów bez wariantowości.
+
+**Reguła:** każdy `Product` musi mieć minimum jedną `ProductOption` z minimum jedną wartością. Dla produktów single-variant używamy dummy:
+```ts
+options: [{ title: "Wariant", values: ["Standardowy"] }]
+variant: { options: { Wariant: "Standardowy" } }
+```
+
+Admin UI ukrywa tę opcję dla single-variant produktów (bagażniki, wiązki standalone).
+
+### 29.6. `query.graph` z głębokimi nested linkami zawodzi
+
+**Problem:** query w stylu `brand → models → generations → products` rzucają `"Cannot read properties of undefined (reading 'strategy')"` w Medusa 2.15.2.
+
+**Workaround:** rozdzielenie na 2 query (entity-level + relacja) i agregacja w JS. Funkcjonalnie to samo, ale bardziej rozwlekłe.
+
+### 29.7. Filtr po linkowanej encji na product nie działa
+
+**Problem:** `product` z filtrem typu `filters: { generations: { id }}` rzuca 500.
+
+**Workaround:** query od strony `generation` → pobierz `products.id` → fetch products po liście ID.
+
+### 29.8. Filtry zakresowe (`$gte`, `$lte`) — JS-side
+
+**Stan:** Medusa Query nie wspiera natywnie operatorów zakresowych w stable. Endpointy listing filtrują w JS po pobraniu z DB.
+
+**Konsekwencja:** OK do kilkuset produktów. Powyżej 1000+ → refactor na natywne micro-orm operatory lub raw SQL.
+
+### 29.9. SKU musi być globalnie unique w Medusa
+
+**Problem:** ten sam `catalog_number` w wielu produktach (np. Hak Z/016 dla różnych aut) generuje konflikt SKU jeśli format to tylko `Z/016-{variant_code}`.
+
+**Reguła:** Format SKU dla per-generation produktów:
+```
+{catalog_number}-{generation_code}-{variant_code}
+```
+Przykład: `Z/016-OCTAVIA-3-M13`
+
+Dla globalnych produktów (BikeRack, StandaloneWiring uniwersalny) wystarczy `{catalog_number}` lub `{catalog_number}-{generation_code}`.
+
+### 29.10. Redis fallback do in-memory w dev
+
+**Stan:** Medusa nie czyta `REDIS_URL` z `.env` automatycznie dla modułów `event_bus`, `cache`, `workflow_engine`. Bez konfiguracji → in-memory fallback z warningiem `"not recommended for production"`.
+
+**Plan:** dodać do `medusa-config.ts` przed Fazą 4 (integracje):
+```ts
+{ resolve: "@medusajs/event-bus-redis", options: { redisUrl: process.env.REDIS_URL } },
+{ resolve: "@medusajs/cache-redis", options: { redisUrl: process.env.REDIS_URL } },
+{ resolve: "@medusajs/workflow-engine-redis", options: { redis: { url: process.env.REDIS_URL } } },
+```
+
+W dev OK z fallbackiem. Na prod obowiązkowo Redis.
+
+---
+
+## 27. Logger (Pino przez Medusę)
 
 ```ts
 // W serwisie / endpoincie
@@ -749,7 +853,7 @@ class HookCatalogService extends MedusaService {
 
 ---
 
-## 27. Cykl pracy z Claude Code (typowa iteracja)
+## 28. Cykl pracy z Claude Code (typowa iteracja)
 
 ### Zasada podstawowa: jedna sekcja briefu = jedna iteracja
 
@@ -825,7 +929,7 @@ Jak zauważysz że CC:
 
 ---
 
-## 28. Co aktualizujemy z czasem
+## 29. Co aktualizujemy z czasem
 
 Ten dokument **żyje** — jak okaże się że jakaś konwencja przeszkadza lub trzeba dorzucić nową regułę, aktualizujesz tu, nie w briefach.
 
@@ -843,8 +947,9 @@ Ten dokument **żyje** — jak okaże się że jakaś konwencja przeszkadza lub 
 | 1.0 | start projektu | Pierwsza wersja, wszystkie 15 sekcji ogólnych |
 | 1.1 | po decyzjach frontendowych | Dorzucone sekcje 16-25 dla frontendu (Next.js, Tailwind + shadcn, Framer Motion, React Query, React Hook Form + Zod, SSG/ISR strategie, Server vs Client Components, SEO, Performance, Authentication, brak i18n) |
 | 1.2 | po wskazówce o iteracyjnej pracy | Rozbudowana sekcja 27 — jak pracować z CC po jednej sekcji briefu, rozbicie Fazy 1 na 13 iteracji, co robić gdy CC odpłynie |
+| 1.3 | po zakończeniu Fazy 1 (2026-05-16) | Dodana sekcja 26 — 10 znanych quirks Medusy 2.15.2 z Fazy 1 (variant link workaround, M:N isList, enum constraints, integer number, single-variant option, query.graph limits, JS-side filtering, SKU uniqueness, Redis fallback) |
 
 ---
 
-**Wersja:** 1.2  
+**Wersja:** 1.3  
 **Status:** Stały kontekst dla Claude Code w każdej fazie

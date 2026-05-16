@@ -31,7 +31,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 
 **Kamień milowy Fazy 1 osiągnięty:** `npx medusa exec ./src/scripts/test-workflows.ts` tworzy 3 produkty (Hak Skoda Octavia 3 z 5 wariantami, Bagażnik testowy z 1, Moduł uniwersalny z 1) widoczne w `/app`.
 
-**Następny krok:** czekamy na brief #2 (admin UI) — user napisze przed kontynuacją.
+**Następny krok:** Faza 2 — admin UI dla wystawiania produktów. Brief w `docs/briefs/admin-ui-brief.md`, plan 15 iteracji, kamień milowy = 5 produktów wystawionych przez UI w 30s.
 
 ---
 
