@@ -20,5 +20,8 @@ module.exports = defineConfig({
     {
       resolve: "./src/modules/hook-catalog",
     },
+    {
+      resolve: "./src/modules/wiring-equipment",
+    },
   ],
 })
