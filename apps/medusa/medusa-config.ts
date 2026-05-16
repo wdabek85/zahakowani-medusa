@@ -26,5 +26,8 @@ module.exports = defineConfig({
     {
       resolve: "./src/modules/bike-rack-catalog",
     },
+    {
+      resolve: "./src/modules/standalone-wiring-catalog",
+    },
   ],
 })
