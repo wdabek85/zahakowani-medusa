@@ -31,7 +31,40 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 
 **Kamień milowy Fazy 1 osiągnięty:** `npx medusa exec ./src/scripts/test-workflows.ts` tworzy 3 produkty (Hak Skoda Octavia 3 z 5 wariantami, Bagażnik testowy z 1, Moduł uniwersalny z 1) widoczne w `/app`.
 
-**Następny krok:** Faza 2 — admin UI dla wystawiania produktów. Brief w `docs/briefs/admin-ui-brief.md`, plan 15 iteracji, kamień milowy = 5 produktów wystawionych przez UI w 30s.
+**Faza 2 — 5.5/15 iteracji zamknięte** (`docs/briefs/admin-ui-brief.md`, 15 iteracji łącznie):
+
+| # | Iteracja | Commit | Stan |
+|---|---|---|---|
+| 1 | Admin endpointy publish-hook/bike-rack/standalone-wiring + Zod + helper mapPublishError | `4dfddf9` | ✅ 21 asercji PASSED |
+| 2 | TextAutocomplete komponent + 4 endpointy /admin/autocomplete/{manufacturers,homologations,ball-types,body-types} | `c576c29` | ✅ 16 asercji PASSED |
+| 3 | VehiclePicker komponent + admin endpoint /admin/vehicle-fitment/lookup | `21266e4` | ✅ 7 asercji PASSED |
+| 4 | Helper getVariantWiringInfo (workaround dla §26.1) | `095b11a` | ✅ 9 asercji PASSED |
+| 5 | PublishProductModal (3 warianty per kategoria: hook/bike-rack/standalone-wiring) | `9099796` | ✅ bundle compile OK |
+| 6a | Admin CRUD endpointy /admin/hooks + Zod schemas + RHF/zodResolver install | `8c89df6` | ⏳ test odłożony do 6b |
+| **6b** | **UI Routes /admin/hooks (listing + create + edit) — NASTĘPNE** | — | ⬜ |
+
+**Następny krok (iteracja 6b):**
+- `src/admin/routes/hooks/page.tsx` — listing (tabela z filtrami, paginacja, akcje "Edytuj"/"Wystaw produkt"/"Usuń")
+- `src/admin/routes/hooks/create/page.tsx` — formularz nowego haka (18 pól, RHF + zodResolver z `validators/hook.ts`)
+- `src/admin/routes/hooks/[id]/page.tsx` — edycja + panel "Pasujące pojazdy" + panel "Wystawione produkty" + button "Wystaw produkt" otwierający `PublishProductModal`
+- Komponent wspólny `src/admin/routes/hooks/_components/hook-form.tsx` (reuse między create/edit)
+- Po zakończeniu UI Routes: odpalić `npx medusa exec ./src/scripts/test-admin-hooks-crud.ts` (12 grup, ~25 asercji)
+- Komitować w 1 commicie `[FAZA-2] iteracja 6b: UI Routes /admin/hooks`
+
+**Iteracje 7-15 wg planu briefu §17:**
+| # | Iteracja | Czas |
+|---|---|---|
+| 7 | UI Route /admin/bike-racks | 2-3h |
+| 8 | UI Route /admin/standalone-wiring (warunkowa logika fits_all_vehicles) | 2-3h |
+| 9 | UI Route /admin/wiring-equipment (edycja 4 rekordów, no create/delete) | 1-2h |
+| 10 | UI Route /admin/vehicles (drzewo Brand/Model/Generation, CRUD) | 3-4h |
+| 11 | Widgety na stronach Medusa Product (3 widgety: hook-info, fitment-info, catalog-publish-button) | 2h |
+| 12 | Uzupełnienie walidacji Zod we wszystkich endpointach | 1h |
+| 13 | Cleanup templatkowych endpointów /api/{admin,store}/custom | 15 min |
+| 14 | Testy ręczne — wystawienie 5 produktów (3 haki + 1 bagażnik + 1 wiązka) przez UI | 1-2h |
+| 15 | Raport końcowy Fazy 2 (`docs/raports/RAPORT-FAZA-2.md`) | 30 min |
+
+**Kamień milowy Fazy 2:** 5 produktów wystawionych wyłącznie przez admin UI w 30s/produkt.
 
 ---
 
