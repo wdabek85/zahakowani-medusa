@@ -16,7 +16,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 
 ---
 
-## Status projektu (na 2026-05-19, ostatnia sesja Fazy 3 iteracja 1)
+## Status projektu (2026-05-19, koniec sesji 2 — atomy UI gotowe, user chce dopracować buttony)
 
 | Etap | Stan |
 |---|---|
@@ -24,7 +24,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 | Etap 0.1 — setup monorepo + Docker + GitHub | ✅ zamknięty |
 | **Faza 1 — backend Medusy (brief #1)** | ✅ **ZAKOŃCZONA** |
 | **Faza 2 — Admin UI (brief #2)** | ✅ **ZAKOŃCZONA** |
-| **Faza 3 — Frontend Next.js (brief #3 gotowy)** | ⏳ **TERAZ — 1/31 iteracji** |
+| **Faza 3 — Frontend Next.js (brief #3 gotowy)** | ⏳ **TERAZ — 2/31 iteracji** |
 | Faza 4 — Integracje (płatności, kurier, faktury) | 🔒 |
 | Faza 5 — Content, SEO, launch | 🔒 |
 | Faza 6 — V1 (priorytet 1: B2B portal z progami rabatowymi) | 🔒 |
@@ -34,10 +34,20 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 |---|---|---|---|
 | 0 | setup-poland-region.ts (backend prep: EUR→PLN, country PL, tax VAT 23%) | `6519728` | ✅ |
 | 1 | Setup apps/storefront — Next.js 15.1 + Tailwind + TS strict + path alias | `5abf552` | ✅ dev działa, build TODO §3G |
-| 2 | Atomy UI (shadcn/ui copy-paste + lucide-react) — NASTĘPNA | — | ⬜ |
+| 2 | Atomy UI (Button, Input, Label, Badge, Card, Container) + cn + lucide-react | `9598418` | ✅ showcase widoczny, type-check pass |
+| **2.1** | **🔥 Dopracowanie buttonów (user feedback) — NASTĘPNA** | — | ⬜ |
 | 3 | Stałe biznesowe + variant-wiring helper + Medusa client | — | ⬜ |
 | 4 | Layout (Header + Footer + InfoBar) | — | ⬜ |
 | 5-31 | Strona po stronie wg briefu §18 (Fazy 3B-3H) | — | ⬜ |
+
+**🔥 NASTĘPNA SESJA — iteracja 2.1: dopracowanie buttonów**
+
+User obejrzał showcase atomów (http://localhost:8000 w iteracji 2) i zgłosił że chce popracować nad przyciskami. Konkretny feedback do uzyskania w nowej sesji (kolory? rozmiary? rounded? hover effect? animacje? variants? — user zaznaczy z Figmy lub poda screenshot).
+
+**Pierwszy prompt do CC w nowej sesji:**
+> "Wracamy do buttonów. Otwórz `apps/storefront/src/components/ui/button.tsx` i pokaż mi aktualne variants. Potem zaproponuję zmiany — paleta z Figmy / inny rounded / hover lift / loading spinner / inne sizes."
+
+Lokalizacja: `apps/storefront/src/components/ui/button.tsx` (~50 linii, CVA pattern z variants primary/secondary/ghost/danger/link × sizes sm/md/lg/icon). Wszystkie zmiany centralnie tam — Showcase w `src/app/page.tsx` automatycznie pokaże nowy look.
 
 **Kamień milowy Fazy 1 osiągnięty:** `npx medusa exec ./src/scripts/test-workflows.ts` tworzy 3 produkty (Hak Skoda Octavia 3 z 5 wariantami, Bagażnik testowy z 1, Moduł uniwersalny z 1) widoczne w `/app`.
 
