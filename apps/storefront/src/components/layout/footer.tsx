@@ -34,14 +34,14 @@ export function Footer() {
       <div className="container py-14">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5">
           {/* Brand + tagline */}
-          <div className="lg:col-span-2 lg:pr-8">
+          <div>
             <Link
               href="/"
               className="inline-block text-2xl font-bold tracking-wider text-white"
             >
               ZAHAKOWANI
             </Link>
-            <p className="mt-5 max-w-md text-sm leading-relaxed text-secondary-400">
+            <p className="mt-5 text-sm leading-relaxed text-secondary-400">
               {COMPANY_TAGLINE}
             </p>
           </div>
