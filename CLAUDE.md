@@ -49,16 +49,24 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 
 Każdy z 5 wariantami (BARE/W7/W13/M7/M13), inventory 10 szt/wariant. Plus 3 testowe produkty z initial seed (status `draft`) + 4 sample Medusy (status `published`). Łącznie 11 produktów w bazie.
 
-**Faza 3:** Frontend Next.js storefront. Brief #3 w pisaniu w Claude w claude.ai (2026-05-19). Po dostarczeniu briefu CC zaczyna iteracyjnie.
+**Faza 3:** Frontend Next.js storefront. **Brief #3 v1.0 GOTOWY** w `docs/briefs/frontend-brief.md` (1242 linie, 31 iteracji w 8 podfazach 3A-3H, ~90h, 5-7 tygodni). Tech stack guidelines podbita do v1.4 (dodany §26.11 — workflow SDK serialized MedusaError).
 
-**Przygotowania przed Fazą 3 (backend):**
-- Currency EUR → PLN (CC zrobi autonomicznie po sygnale: `setup-poland-region.ts`)
-- Region "Polska" + country PL + tax VAT 23%
-- 1 placeholder shipping option (Faza 4 doprecyzuje InPost/DPD/DHL)
+**Stack Fazy 3 (z briefu §1):** Next.js 15 App Router + React 19 + TS strict + Tailwind + shadcn/ui + lucide-react + Framer Motion + TanStack Query + RHF + Zod + next/image + next/font.
 
-**Decyzje do podjęcia przed Fazą 3:**
-- Domena (zahakowani.pl czy nowa) — wpływa na meta tagi SEO i `canonical` URLs
-- Design tokens z Figmy (kolory/typografia/spacing) → `tailwind.config.ts`. Brak = placeholder Material Design 3.
+**Workflow z Figmą (brief §0):** Figma dostępna pod fileKey `bFOpp42bkgVtsOlzH3CSbb`. User trzyma plik otwarty w desktopowej apce + zaznacza ramkę. CC używa MCP Figma `get_design_context` / `get_variable_defs` żeby pobrać kod + screenshot + tokeny.
+
+**Stałe biznesowe (brief §3 → `lib/utils/constants.ts`):**
+- PHONE: `+48 536 731 515`, LOCATION: `Lubichowo`
+- `FREE_SHIPPING_THRESHOLD_PLN = 450`
+- `AUTHORIZED_DISTRIBUTORS = ["Imioła Hak-Pol"]` (hardcoded, V1: tabela Manufacturer)
+- `FEATURED_BRANDS`: Skoda, VW, Ford, Toyota, BMW, Audi, Renault, Opel (hardcoded top 8, V1: po analytics)
+
+**Pierwszy prompt do CC po wgraniu dokumentów (brief §18):**
+> "Mam wgrane 4 dokumenty. Implementuj iterację 1 z sekcji 18 briefu #3: Setup `apps/storefront/` — Next.js 15 + Tailwind + TS strict + shadcn init. Tokeny tailwinda pobierz z Figmy przez MCP. Tylko ta iteracja."
+
+**Co wciąż OPEN (decyzje user przed Fazą 3 — nie blokuje startu, ale wpływa na SEO):**
+- Domena (`zahakowani.pl` czy nowa) → meta tagi i `canonical` URLs. Brief używa `zahakowani.pl` jako placeholder.
+- Backend korekta (EUR → PLN region) — CC może zrobić podczas iteracji 1 albo wcześniej. Brief tego wprost nie wymaga, ale Medusa SDK będzie zwracać ceny w region currency.
 
 ---
 

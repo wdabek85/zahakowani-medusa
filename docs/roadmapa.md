@@ -1,4 +1,4 @@
-# Zahakowani — roadmapa realizacji (v1.3, 2026-05-19)
+# Zahakowani — roadmapa realizacji (v1.4)
 
 Plan krok po kroku od dziś do działającego sklepu. Każde zadanie ma status:
 
@@ -9,47 +9,38 @@ Plan krok po kroku od dziś do działającego sklepu. Każde zadanie ma status:
 
 ---
 
-## Stan obecny (2026-05-19)
+## Stan obecny
 
 **Faza 0 — Decyzje przed startem:** ✅ **ZAMKNIĘTA**
 
-**Etap 0.1 — Setup repo + środowisko deweloperskie (monorepo):** ✅ **ZAMKNIĘTY** (repo na GitHub: wdabek85/zahakowani-medusa, Docker Postgres+Redis na porcie 55432, Medusa v2.15.2 zainicjalizowana)
+**Etap 0.1 — Setup repo + środowisko deweloperskie (monorepo):** ✅ **ZAMKNIĘTY**
 
-**Faza 1 — Backend Medusy:** ✅ **ZAKOŃCZONA** — 13 iteracji, raport: `docs/raports/RAPORT-FAZA-1.md`
-- 5 modułów domeny: vehicle_fitment, hook_catalog, wiring_equipment, bike_rack_catalog, standalone_wiring_catalog
-- 5 Module Links + 3 workflowy z compensate (createProductFromHook/BikeRack/StandaloneWiring)
-- 11 endpointów Store API (vehicle-fitment + by-vehicle + listings + SEO landing pages)
-- 4 helpery w `utils/catalog/` (generateProductTitle/SKU/handle/years-label)
-- Seedy: 4 WiringEquipment (W7/W13/M7/M13) + Skoda Octavia 3 + 3 test catalog items
+**Faza 1 — Backend Medusy:** ✅ **ZAMKNIĘTA (2026-05-16)**
 
-**Faza 2 — Admin UI:** ✅ **ZAKOŃCZONA** — 15 iteracji, raport: `docs/raports/RAPORT-FAZA-2.md`
-- 24 admin endpointy (CRUD per kategoria + publish-* + autocomplete + vehicle-fitment tree)
-- 5 UI Routes w `src/admin/routes/`: hooks, bike-racks, standalone-wiring, wiring-equipment, vehicles (drzewo CRUD)
-- 4 widgety na stronie produktu (catalog info per kategoria + fitment info)
-- 8 walidatorów Zod, **78 zautomatyzowanych asercji testowych PASSED**
-- Kamień milowy osiągnięty: wystawianie produktów przez UI w ~30s/produkt
-- **Demo katalog:** 4 haki dla 4 marek wystawione przez `src/scripts/seed-demo-hooks.ts` (Westfalia W/200 dla VW Golf 7, Brink B/305 dla Ford Focus 3, Steinhof S/410 dla BMW F30, Auto-Hak A/115 dla Skoda Octavia 3) — status `published`, 5 wariantów każdy, ceny rynkowe PLN
+**Faza 2 — Admin UI:** ✅ **ZAMKNIĘTA (2026-05-16)**
 
-**Faza 3 — Frontend Next.js MVP:** ⏳ **TERAZ** — brief #3 (`zahakowani-frontend-brief.md`) w pisaniu w Claude w claude.ai na podstawie `RAPORT-FAZA-2.md` + `plan-dzialania.md` §4 + `tech-stack-guidelines.md` §§16-25. Po dostarczeniu briefu CC zaczyna iteracyjnie (sekcja-po-sekcji wg guidelines §28).
+Wszystkie 5 produktów testowych wystawione przez UI panelu w ~30s na produkt. 78 zautomatyzowanych asercji passed. 14 commitów `[FAZA-2]`. Pełen raport: `zahakowani-raport-faza-2.md`. Wykryto nowy quirk Medusy 2.15.2 (§26.11 — workflow SDK serializuje MedusaError do plain object).
 
-**Repo:** 35 commitów na `main`. Ostatni `8c72d40` ([CHORE] seed-demo-hooks).
+**Faza 3 — Frontend Next.js MVP:** ⏳ **GOTOWA DO STARTU — brief #3 v1.0 gotowy do Claude Code, 31 iteracji rozpisane**
+
+Seed katalogu: ✅ wykonany — 4 haki opublikowane (commit `8c72d40`, `src/scripts/seed-demo-hooks.ts`): Westfalia W/200 dla VW Golf 7, Brink B/305 dla Ford Focus 3, Steinhof S/410 dla BMW F30, Auto-Hak A/115 dla Skoda Octavia 3. Każdy z 5 wariantami i inventory 10 szt — front ma materiał do testowania layoutu, listingu i strony produktu.
 
 ---
 
 ## Przegląd faz
 
-| Etap | Co | Stan | Czas | Kamień milowy |
-|---|---|---|---|---|
-| **0** | Decyzje przed startem | ✅ | zamknięta | Wszystkie decyzje podjęte |
-| **0.1** | Setup monorepo + Docker + GitHub | ✅ | zrobione | Repo + Docker działa |
-| **1** | Backend Medusy — schema i workflow | ✅ | zrobione (13 iteracji) | `test-workflows.ts` tworzy 3 produkty z wariantami |
-| **2** | Admin UI — wystawianie produktów | ✅ | zrobione (15 iteracji, 78 asercji PASSED) | Wystawianie przez panel w ~30s + 4 demo haki w bazie |
-| **3** | **Frontend Next.js MVP** | ⏳ **TERAZ** | 4-6 tyg | Sklep przeklikany od listy do koszyka |
-| **4** | Integracje (płatności, kurier, faktury, email) | 🔒 | 2-3 tyg | Pełna transakcja testowa z fakturą |
-| **5** | Content + SEO + Launch | 🔒 | 2-3 tyg | Sklep żyje publicznie |
-| **6** | V1 — analityka, opinie, growth | 🔒 | non-stop po launchu | — |
+| Etap | Co | Czas | Kamień milowy |
+|---|---|---|---|
+| **0** | Decyzje przed startem | ✅ zamknięta | Wszystkie decyzje podjęte |
+| **0.1** | Setup monorepo + Docker + GitHub | 1-2 dni | Klonujesz repo na drugiej maszynie i wszystko odpala |
+| **1** | Backend Medusy — schema i workflow | 2-3 tyg | Skrypt testowy tworzy 3 produkty z wariantami |
+| **2** | Admin UI — wystawianie produktów | 2-3 tyg | Wystawiasz produkt w 30s przez panel |
+| **3** | Frontend Next.js MVP | 4-6 tyg | Sklep przeklikany od listy do koszyka |
+| **4** | Integracje (płatności, kurier, faktury, email) | 2-3 tyg | Pełna transakcja testowa z fakturą |
+| **5** | Content + SEO + Launch | 2-3 tyg | Sklep żyje publicznie |
+| **6** | V1 — analityka, opinie, growth | non-stop po launchu | — |
 
-**Pozostało do launchu:** ~3-4 mies. (Fazy 3, 4, 5) przy 20-25 h/tydzień solo.
+**Razem do launchu:** ~4-5 miesięcy przy 20-25 h/tydzień solo.
 
 ---
 
@@ -57,14 +48,14 @@ Plan krok po kroku od dziś do działającego sklepu. Każde zadanie ma status:
 
 | Dokument | Rola | Status |
 |---|---|---|
-| `zahakowani-roadmapa.md` | **ten** — plan w czasie | ✅ aktualny |
+| `zahakowani-roadmapa.md` | **ten** — plan w czasie | ✅ aktualny (v1.4) |
 | `zahakowani-plan-dzialania.md` | strategia, struktura serwisu, zakres MVP | ✅ aktualny |
-| `zahakowani-tech-stack-guidelines.md` | **stały kontekst dla CC — stack, konwencje, jak budować** | ✅ **v1.0 gotowy** |
-| `zahakowani-medusa-brief.md` | techniczna spec modeli Medusy | ✅ **v2.1 — gotowy do Claude Code (z seedami + skryptem)** |
-| `zahakowani-admin-ui-brief.md` | techniczna spec admin UI | ✅ napisany + zrealizowany (Faza 2 zakończona) |
-| `zahakowani-frontend-brief.md` | techniczna spec frontu Next.js | ⏳ w pisaniu (Faza 3 — TERAZ) |
-| `zahakowani-raport-faza-1.md` | raport końcowy Fazy 1 | ✅ w `docs/raports/RAPORT-FAZA-1.md` |
-| `zahakowani-raport-faza-2.md` | raport końcowy Fazy 2 | ✅ w `docs/raports/RAPORT-FAZA-2.md` |
+| `zahakowani-tech-stack-guidelines.md` | **stały kontekst dla CC — stack, konwencje, jak budować** | ✅ v1.4 + quirks Medusy z Faz 1 i 2 (§26.11 — workflow SDK serialized MedusaError) |
+| `zahakowani-medusa-brief.md` | techniczna spec modeli Medusy (Faza 1) | ✅ v2.1 — zaimplementowany |
+| `zahakowani-raport-faza-1.md` | raport końcowy Fazy 1 | ✅ gotowy |
+| `zahakowani-admin-ui-brief.md` | techniczna spec admin UI (Faza 2) | ✅ v1.0 — zaimplementowany |
+| `zahakowani-raport-faza-2.md` | **raport końcowy Fazy 2 — odstępstwa, nowy quirk, kontekst dla briefu #3** | ✅ **gotowy** |
+| `zahakowani-frontend-brief.md` | techniczna spec frontend Next.js (Faza 3) | ✅ **v1.0 gotowy do CC, 31 iteracji** |
 
 ---
 
@@ -185,19 +176,14 @@ Po tym: wchodzisz w Fazę 1.
 
 ---
 
-## Faza 1 — Backend Medusy ✅ ZAKOŃCZONA
+## Faza 1 — Backend Medusy ✅ ZAMKNIĘTA (2026-05-16)
 
-Patrz `docs/raports/RAPORT-FAZA-1.md` — pełny raport z 13 iteracji (1012 linii: pliki, modele, linki, workflowy, endpointy, seedy, testy, odstępstwa, problemy).
+**Cel zrealizowany:** schema gotowa, workflowy działają, można wystawić produkty wszystkich 3 kategorii przez API.
 
-**W skrócie:** 5 modułów domeny + 5 Module Links + 3 workflowy z compensate + 11 endpointów Store API + helpery + seedy. `test-workflows.ts` przeszedł, w bazie są 4 demo haki (status `published`).
+**Repo:** github.com/wdabek85/zahakowani-medusa
+**Stack:** Medusa.js v2.15.2 + PostgreSQL 16 + Redis 7 + TypeScript strict
 
-Historyczna treść poniżej zostawiona dla kontekstu:
-
----
-
-### Faza 1 — szczegóły historyczne (zrealizowane)
-
-**Cel:** schema gotowa, workflow działa, można wystawić produkty wszystkich 3 kategorii przez API.
+**Pełen raport:** `zahakowani-raport-faza-1.md`
 
 ### Co Claude Code potrzebuje żeby zacząć
 
@@ -224,37 +210,43 @@ Historyczna treść poniżej zostawiona dla kontekstu:
 | Endpointy SEO landing pages | ✅ |
 | Workflowy `createProductFromBikeRack` i `createProductFromStandaloneWiring` | ✅ |
 
-### Zadania w fazie
+### Zadania w fazie — WSZYSTKIE ZAMKNIĘTE ✅
 
-| # | Zadanie | Status | Wykonawca |
-|---|---|---|---|
-| 1.1 | Aktualizacja briefu #1 do v2.0 | ✅ | Zrobione |
-| 1.2 | Setup modułów `hook_catalog`, `wiring_equipment`, `vehicle_fitment` | ⬜ | Claude Code |
-| 1.3 | Setup modułów `bike_rack_catalog`, `standalone_wiring_catalog` | ⬜ | Claude Code |
-| 1.4 | Module Links | ⬜ | Claude Code |
-| 1.5 | Workflowy `createProductFromHook`, `createProductFromBikeRack`, `createProductFromWiring` | ⬜ | Claude Code |
-| 1.6 | Endpoint cross-category vehicle search | ⬜ | Claude Code |
-| 1.7 | Seed 4 WiringEquipment + 1 Brand + 1 Model + 1 Generation + 1 Hook + 1 BikeRack + 1 StandaloneWiring w migracji (CC z briefu, wartości testowe) | ✅ | Specyfikacja w briefie |
-| 1.8 | Skrypt testowy `src/scripts/test-workflows.ts` odpalający 3 workflowy z seedem | ✅ | Specyfikacja w briefie |
-| 1.9 | Ty: `npx medusa db:migrate` + `npx medusa exec ./src/scripts/test-workflows.ts` + weryfikacja w `/app` że 3 produkty istnieją z wariantami | ⬜ | Po implementacji CC |
+| # | Zadanie | Status |
+|---|---|---|
+| 1.1 | Aktualizacja briefu #1 do v2.1 | ✅ |
+| 1.2 | Moduły `hook_catalog`, `wiring_equipment`, `vehicle_fitment` | ✅ |
+| 1.3 | Moduły `bike_rack_catalog`, `standalone_wiring_catalog` | ✅ |
+| 1.4 | Module Links (5 sztuk — variant↔wiring jako metadata workaround) | ✅ |
+| 1.5 | 3 workflowy z kompensacjami | ✅ |
+| 1.6 | Endpointy cross-category vehicle search | ✅ |
+| 1.7 | Seed: 4 WiringEquipment + 1 Brand + 1 Model + 1 Generation + 1 Hook + 1 BikeRack + 1 StandaloneWiring | ✅ |
+| 1.8 | Skrypt `test-workflows.ts` + 9 dodatkowych test scripts | ✅ |
+| 1.9 | Weryfikacja w `/app/products` — 3 produkty widoczne | ✅ |
+| 1.10 | Raport końcowy `zahakowani-raport-faza-1.md` | ✅ |
 
-**Czas:** 2-3 tygodnie.
+**Kamień milowy osiągnięty:** `npx medusa exec ./src/scripts/test-workflows.ts` przechodzi end-to-end → 3 produkty draft w `/app/products` ze wszystkimi powiązaniami.
 
-**Kamień milowy:** odpalasz `npx medusa exec ./src/scripts/test-workflows.ts` → w panelu Medusy widzisz 3 produkty (hak z 5 wariantami, bagażnik z 1 wariantem, wiązka uniwersalna z 1 wariantem). Schema multi-category potwierdzona, workflow działa.
+### Kluczowe odstępstwa i workaroundy (szczegóły w raporcie §10-11)
+
+| Co | Workaround | Konsekwencja dla Fazy 2 |
+|---|---|---|
+| **Variant ↔ WiringEquipment link** — bug Medusy 2.15.2 | Dane w `variant.metadata` jako jsonb | Admin UI musi czytać `variant.metadata.wiring_equipment_id` zamiast `variant.wiring_equipment` |
+| **SKU dla per-generation produktów** | Format: `{catalog_number}-{generation_code}-{variant_code}` zamiast `{catalog_number}-{variant_code}` | Brief #2 wpisuje rzeczywisty format |
+| **Enum vs text** dla `pin_count`, `power_socket` | Pola jako `text()` (GraphQL enum constraints) | Zod walidacja allowed values w formularzach |
+| **Single-variant produkty** | Mają dummy `ProductOption: Wariant=Standardowy` (wymóg Medusa core) | Admin UI ukrywa to pole / pokazuje jako "brak wariantów" |
+| **Endpoint `models/:modelId/generations`** | używa `modelId`, nie `modelCode` | `lookup` endpoint zwraca ID, używaj go |
+| **`weight_kg` jako integer** | 1.5 zaokrąglone do 2 | Inputy admin akceptują integer (refactor do decimal post-launch) |
+| **Filtry zakresowe (`$gte`, `$lte`)** | Aplikowane w JS po pobraniu z DB | Działa OK do kilkuset produktów, optymalizacja przed launchem |
+
+### Problemy zgłoszone do post-launch
+
+- **Redis fallback do in-memory** — `medusa-config.ts` wymaga dorzucenia modułów Redis (event-bus, cache, workflow-engine) przed Fazą 4
+- **Templatkowe endpointy** `/admin/custom` i `/store/custom` — do usunięcia w Fazie 2 przy clean-upie
 
 ---
 
-## Faza 2 — Admin UI ✅ ZAKOŃCZONA
-
-Patrz `docs/raports/RAPORT-FAZA-2.md` — pełny raport z 15 iteracji (24 endpointy, 5 UI Routes, 4 widgety, 8 walidatorów Zod, 78 asercji testowych).
-
-**W skrócie:** wystawianie produktów przez UI w ~30s. Demo katalog: 4 marki (Skoda, VW, Ford, BMW) + 4 haki (Westfalia, Brink, Steinhof, Auto-Hak) wystawione przez `src/scripts/seed-demo-hooks.ts`, status `published`, 5 wariantów każdy.
-
-Historyczna treść poniżej zostawiona dla kontekstu:
-
----
-
-### Faza 2 — szczegóły historyczne (zrealizowane)
+## Faza 2 — Admin UI ✅ ZAMKNIĘTA (2026-05-16)
 
 **Cel:** wystawianie produktów we wszystkich 3 kategoriach przez panel.
 
@@ -284,7 +276,7 @@ Historyczna treść poniżej zostawiona dla kontekstu:
 
 ---
 
-## Faza 3 — Frontend Next.js MVP ⏳ TERAZ
+## Faza 3 — Frontend Next.js MVP ⏳ TERAZ — brief #3 gotowy, czeka na start CC
 
 **Cel:** użytkownik może przeklikać sklep od strony głównej do koszyka.
 
@@ -292,7 +284,7 @@ Historyczna treść poniżej zostawiona dla kontekstu:
 
 | Wymagane | Status |
 |---|---|
-| Faza 2 zakończona | ✅ |
+| Faza 2 zakończona | 🔒 |
 | **Brief #3 (frontend) napisany** | ⬜ |
 | Branding + design system | ✅ **Material Design w Figmie, gotowy** |
 | Domena | 🔒 do decyzji |
@@ -400,24 +392,41 @@ Historyczna treść poniżej zostawiona dla kontekstu:
 
 ---
 
-## Twój następny ruch (TERAZ — 2026-05-19)
+## Twój następny ruch (TERAZ)
 
-**Faza 3 (Frontend Next.js) — brief #3 w pisaniu w Claude w claude.ai.**
+**Fazy 1 i 2 zamknięte** ✅. **Brief #3 (frontend) gotowy** ✅.
 
-Po ukończeniu briefu wrzucasz go do `docs/briefs/frontend-brief.md`, otwierasz CC w katalogu projektu i mówisz "Faza 3, iteracja 1" — CC będzie wiedział co robić (CLAUDE.md + raporty Fazy 1/2 + guidelines v1.3 są w repo).
+**Wrzucasz do Claude Code 4 dokumenty:**
+1. `zahakowani-tech-stack-guidelines.md` v1.4 — stały kontekst (konwencje + 11 quirks Medusy z Faz 1 i 2 włącznie z §26.11)
+2. `zahakowani-raport-faza-1.md` — co realnie powstało w backendzie
+3. `zahakowani-raport-faza-2.md` — co realnie powstało w admin UI + quirk §26.11
+4. `zahakowani-frontend-brief.md` v1.0 — spec frontu
 
-**Niezależnie od briefu, do podjęcia decyzja:**
+**Plus:** masz **Figma otwartą w desktopowej apce Figma** podczas pracy. CC używa MCP Figma do pobierania design context per komponent. Każda iteracja pracuje na jednej sekcji Figmy.
 
-1. **Domena** (`plan-dzialania.md` §7) — `zahakowani.pl` (cutover ze starego WP) czy nowa? Wpływa na meta tagi SEO i `canonical` URLs w `generateMetadata()` na każdej stronie.
-2. **Eksport tokenów designu z Figmy** (kolory, typografia, spacing, breakpoints) → wpiszę do `apps/storefront/tailwind.config.ts`. Bez tego użyję placeholder z Material Design 3 defaults (do podmiany później).
+**Pracujesz iteracyjnie strona po stronie, sekcja po sekcji** (zgodnie z `tech-stack-guidelines.md` sekcja 28 + sekcja 18 briefu #3). Brief ma rozpisane 31 iteracji.
 
-**Backend do skorygowania przed Fazą 3** (CC może zrobić autonomicznie):
+**Pierwszy prompt do CC:**
+> "Mam wgrane 4 dokumenty. Implementuj iterację 1 z sekcji 18 briefu #3: Setup `apps/storefront/` — Next.js 15 + Tailwind + TS strict + shadcn init. Tokeny tailwinda pobierz z Figmy przez MCP (mam plik otwarty, zaznaczyłem ramkę z tokenami). Tylko ta iteracja."
 
-- Currency `EUR` (z templatki Medusy) → `PLN` dla regionu Polska
-- Dodać region "Polska" + przypisać `pl` country + tax region VAT 23%
-- Dodać 1 placeholder shipping option (faktyczne InPost/DPD/DHL w Fazie 4)
+**Sekcja 18 briefu rozbiła Fazę 3 na 8 podfaz (3A-3H):**
 
-**Po dostarczeniu briefu #3 CC rusza z Fazą 3** zgodnie z guidelines §28 — sekcja-po-sekcji, test po każdej iteracji, commit `[FAZA-3] iteracja X: opis`.
+| Podfaza | Co | Iteracje | Czas |
+|---|---|---|---|
+| 3A | Setup + fundament (Next.js, Tailwind, tokeny, atomy, layout) | 1-4 | 1-2 tyg |
+| 3B | Strona główna (Hero, sekcje, composition) | 5-11 | 1-2 tyg |
+| 3C | Listingi kategorii + filtry | 12-16 | 1 tydz |
+| 3D | Wyszukiwanie po pojeździe | 17 | kilka dni |
+| 3E | Strona produktu (galeria, warianty, parametry) | 18-21 | 1-2 tyg |
+| 3F | Koszyk + checkout (drawer, strona, formularz, mock confirmation) | 22-25 | 1-2 tyg |
+| 3G | Strony statyczne + SEO + performance | 26-28 | 1 tydz |
+| 3H | Cleanup + raport końcowy | 29-31 | kilka dni |
+
+**Razem:** ~90h pracy z CC rozłożone na 5-7 tygodni.
+
+**Kamień milowy Fazy 3:** user przechodzi pełną ścieżkę zakupową end-to-end (home → wybór pojazdu → listing → produkt → wariant → koszyk → checkout → "zamówienie złożone"). Bez realnej płatności (mock), ale wszystko inne działa, SEO poprawne, Core Web Vitals zielone.
+
+Po zakończeniu Fazy 3 wracasz z raportem (`zahakowani-raport-faza-3.md`) i piszemy razem brief #4 (integracje płatności + kurier + faktury + email).
 
 ---
 
@@ -432,5 +441,5 @@ Po ukończeniu briefu wrzucasz go do `docs/briefs/frontend-brief.md`, otwierasz 
 
 ---
 
-**Wersja:** 1.2  
-**Następny przegląd:** po zakończeniu etapu 0.1
+**Wersja:** 1.4  
+**Następny przegląd:** po zakończeniu Fazy 3

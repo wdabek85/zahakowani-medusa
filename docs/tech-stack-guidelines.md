@@ -819,6 +819,42 @@ Dla globalnych produktów (BikeRack, StandaloneWiring uniwersalny) wystarczy `{c
 
 W dev OK z fallbackiem. Na prod obowiązkowo Redis.
 
+### 29.11. Workflow SDK serializuje MedusaError do plain object (z Fazy 2)
+
+**Problem:** Gdy workflow `createProductFrom*` rzuca `new MedusaError(NOT_FOUND, "...")` ze step'u, do endpointu trafia **plain object** z polem `__isMedusaError: true`, NIE instancja `MedusaError`. Przez to:
+- `err instanceof MedusaError` → `false`
+- `err instanceof Error` → też `false` (plain object)
+- Pole `err.message` jest jednak prawidłowym stringiem
+- Pole `err.type` zawiera typ (`"not_found"`, `"invalid_data"`, etc.)
+
+**Workaround:** helper wykrywa marker `__isMedusaError === true` i `type` typu string → mapuje na odpowiedni HTTP status.
+
+```typescript
+type SerializedMedusaError = {
+  __isMedusaError: true
+  type: string
+  message: string
+  code?: string
+}
+
+function isSerializedMedusaError(e: unknown): e is SerializedMedusaError {
+  return (
+    typeof e === "object" && e !== null
+    && "__isMedusaError" in e && e.__isMedusaError === true
+    && typeof (e as { type?: unknown }).type === "string"
+    && typeof (e as { message?: unknown }).message === "string"
+  )
+}
+```
+
+**Wzór implementacji:** `apps/medusa/src/api/admin/catalog/_helpers.ts` (Faza 2) — `mapPublishError()`.
+
+**Konsekwencje dla frontendu (Faza 3):**
+- Storefront wywołujący endpoint który wewnętrznie odpala workflow musi obsłużyć ten kształt błędu
+- Dotyczy głównie integracji płatności w Fazie 4 (Stripe webhook → workflow → potencjalny błąd)
+
+**Plan:** sprawdzić Medusa 2.16+ przy upgrade — być może naprawione.
+
 ---
 
 ## 27. Logger (Pino przez Medusę)
@@ -948,8 +984,9 @@ Ten dokument **żyje** — jak okaże się że jakaś konwencja przeszkadza lub 
 | 1.1 | po decyzjach frontendowych | Dorzucone sekcje 16-25 dla frontendu (Next.js, Tailwind + shadcn, Framer Motion, React Query, React Hook Form + Zod, SSG/ISR strategie, Server vs Client Components, SEO, Performance, Authentication, brak i18n) |
 | 1.2 | po wskazówce o iteracyjnej pracy | Rozbudowana sekcja 27 — jak pracować z CC po jednej sekcji briefu, rozbicie Fazy 1 na 13 iteracji, co robić gdy CC odpłynie |
 | 1.3 | po zakończeniu Fazy 1 (2026-05-16) | Dodana sekcja 26 — 10 znanych quirks Medusy 2.15.2 z Fazy 1 (variant link workaround, M:N isList, enum constraints, integer number, single-variant option, query.graph limits, JS-side filtering, SKU uniqueness, Redis fallback) |
+| 1.4 | po zakończeniu Fazy 2 (2026-05-16) | Dodany quirk §26.11 — workflow SDK serializuje MedusaError do plain object (z Fazy 2). Wzór `mapPublishError` jako helper. |
 
 ---
 
-**Wersja:** 1.3  
+**Wersja:** 1.4  
 **Status:** Stały kontekst dla Claude Code w każdej fazie
