@@ -16,7 +16,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 
 ---
 
-## Status projektu (2026-05-19, koniec sesji 3 — iteracja 2.1 zakończona, czekamy na iterację 3)
+## Status projektu (2026-05-19, koniec sesji 4 — Layout MVP gotowy: nav 3-warstwowa + Footer)
 
 | Etap | Stan |
 |---|---|
@@ -24,7 +24,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 | Etap 0.1 — setup monorepo + Docker + GitHub | ✅ zamknięty |
 | **Faza 1 — backend Medusy (brief #1)** | ✅ **ZAKOŃCZONA** |
 | **Faza 2 — Admin UI (brief #2)** | ✅ **ZAKOŃCZONA** |
-| **Faza 3 — Frontend Next.js (brief #3 gotowy)** | ⏳ **TERAZ — 2.1/31 iteracji** |
+| **Faza 3 — Frontend Next.js (brief #3 gotowy)** | ⏳ **TERAZ — 4.1/31 iteracji** |
 | Faza 4 — Integracje (płatności, kurier, faktury) | 🔒 |
 | Faza 5 — Content, SEO, launch | 🔒 |
 | Faza 6 — V1 (priorytet 1: B2B portal z progami rabatowymi) | 🔒 |
@@ -34,32 +34,57 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 |---|---|---|---|
 | 0 | setup-poland-region.ts (backend prep: EUR→PLN, country PL, tax VAT 23%) | `6519728` | ✅ |
 | 1 | Setup apps/storefront — Next.js 15.1 + Tailwind + TS strict + path alias | `5abf552` | ✅ dev działa, build TODO §3G |
-| 2 | Atomy UI (Button, Input, Label, Badge, Card, Container) + cn + lucide-react | `9598418` | ✅ showcase widoczny, type-check pass |
-| 2.1 | Zaokrąglenia Button/Badge (rounded-md→rounded) + solid badge variants | `a2d0f20` | ✅ pełne kolory dla product card tags |
-| **3** | **🔥 Stałe biznesowe + variant-wiring helper + Medusa client — NASTĘPNA** | — | ⬜ |
-| 4 | Layout (Header + Footer + InfoBar) | — | ⬜ |
-| 5-31 | Strona po stronie wg briefu §18 (Fazy 3B-3H) | — | ⬜ |
+| 2 | Atomy UI (Button, Input, Label, Badge, Card, Container) + cn + lucide-react | `9598418` | ✅ |
+| 2.1 | Zaokrąglenia Button/Badge (rounded-md→rounded) + solid badge variants | `a2d0f20` | ✅ |
+| 3 LEAN | constants.ts (PHONE/EMAIL/ADDRESS/threshold) — bez Medusa client, bez variant-wiring | `6780e79` | ✅ Medusa client + wiring odłożone do iter 5/7 |
+| 4 | Nav 3-warstwowa: InfoBar + Header + SubNav + MobileMenu (drawer) | `5e4a77c` | ✅ + fix container 1440px/80px padding (`16ad52b`) |
+| 4.1 | Footer 5-kolumnowy + bottom bar (wzór WP, brak Figmy footera) | `3a2350e` | ✅ + fix grid 5 równych kolumn (`09d89e8`) |
+| **5** | **🔥 VehicleSelectorHero (kaskada Brand→Model→Generation) — NASTĘPNA** | — | ⬜ Wymaga link Figma + Medusa client + variant-wiring |
+| 6-31 | Reszta home + listingi + PDP + checkout + cleanup (briefu §18) | — | ⬜ |
 
-**Iteracja 2.1 — co zrobione (sesja 3, 2026-05-19, commit `a2d0f20`):**
-- `Button`: `rounded-md` (6px) → `rounded` (4px) — bardziej "techniczny" look zgodnie z referencją Figma
-- `Badge`: `rounded-full` (pill) → `rounded` (4px) — z pill na tag/sticker shape
-- `Badge`: dodane **solid-\*** variants (`solid-primary`, `solid-warning`, `solid-success`, `solid-error`) — pełny kolor + biały tekst + bez ringu, do variant tagów na ProductCard (wzorem żółtego "ZESTAW" i niebieskiego "MODUL 13PIN" z Figmy)
-- Soft variants (primary/secondary/success/...) **zostają** — to status/info chipy (`✓ Autoryzowany dystrybutor`, `Brak w magazynie`)
-- Showcase: dodany nowy rząd badges pokazujący solid style
+**Iteracja 3 LEAN — co zrobione (sesja 4, 2026-05-19, commit `6780e79`):**
+- `apps/storefront/src/lib/utils/constants.ts` — SITE_NAME, PHONE/PHONE_HREF, EMAIL/EMAIL_HREF, ADDRESS_STREET, ADDRESS_CITY, LOCATION, BUSINESS_HOURS, COMPANY_TAGLINE, FREE_SHIPPING_THRESHOLD_PLN
+- **Medusa client + variant-wiring odłożone** — zrobimy w iteracji w której będą faktycznie potrzebne (iter 5 VehicleSelector lub iter 7 ProductCard). Lean ≠ "tylko 1 plik na ślepo" — chcemy tylko to co aktualnie wykorzystywane.
 
-**Nowy Figma fileKey:** w tej sesji user podzielił się linkiem z fileKey `BGn56bYVXaZT92m2OGlUvZ` (zahakowani-dev). To wygląda jak inny/nowszy plik niż `bFOpp42bkgVtsOlzH3CSbb` wymieniony w briefie #3 §0. Do weryfikacji z userem przy iteracji 3 lub 4 którego trzymać jako "source of truth" dla tokens/komponentów.
+**Iteracja 4 — co zrobione (sesja 4, 2026-05-19, commit `5e4a77c` + `16ad52b`):**
+- `apps/storefront/src/components/layout/`:
+  - `info-bar.tsx` — szary pasek górny, email + telefon (desktop) + threshold (zawsze)
+  - `header.tsx` (Client) — logo + CTA Poradniki + search + Pomoc + user + cart z badge
+  - `sub-nav.tsx` — drugi pasek z 5 kategoriami z chevronami (dropdowny placeholder, iter 5/11)
+  - `mobile-menu.tsx` (Client) — slide-in drawer; Esc + click outside + body lock, **bez Radix Dialog** (mniej deps)
+  - `nav-data.ts` — NAV_CATEGORIES (single source of truth dla SubNav + MobileMenu)
+  - `index.ts` — barrel export
+- Wpięte w `src/app/layout.tsx` (zamiast goły body)
+- `page.tsx` — sprzątnięty `<main>` wrapper (teraz w layout); showcase zostaje do iter 5
+- **Tailwind container update:** max-width **1440px** + padding **80px** na 2xl (per spec Figma — przed: 1280px + 32px)
+- **Decyzje:** telefon `+48 536 731 515` z czatu (nie z Figmy `884 826 068`); InfoBar bez RABAT 5% promo (rejestracja = V1)
 
-**🔥 NASTĘPNA SESJA — iteracja 3: Medusa client + constants + variant-wiring helper**
+**Iteracja 4.1 — co zrobione (sesja 4, 2026-05-19, commit `3a2350e` + `09d89e8`):**
+- `apps/storefront/src/components/layout/footer.tsx` (Server) — 5 kolumn na lg (równe szerokości):
+  - Brand (logo + COMPANY_TAGLINE) | Kontakt (4 dane jako `<dl>`) | Obsługa Klienta | O nas | Katalog
+  - Bottom bar z © currentYear + SITE_NAME
+- `nav-data.ts` rozszerzone o `FOOTER_LINK_GROUPS` (3 grupy: Obsługa/O nas/Katalog) + typy
+- `constants.ts` rozszerzone o `BUSINESS_HOURS` i `COMPANY_TAGLINE`
+- **Decyzje:** logo footera = tylko tekst (refaktor do `<Logo />` gdy user dostarczy SVG); pominięte "atrivo" credit (to obecna agencja WP)
+- Tło `bg-secondary-900` (#0f172a slate-dark, nie pure black) — gdy user da tokens z Figmy podmieniamy
 
-Z briefu #3 §3 i §11. ~1-2h, czysto pluming bez UI. Po niej iteracja 4 (Layout).
+**🔥 NASTĘPNA SESJA — iteracja 5: VehicleSelectorHero**
 
-Trzy pliki do stworzenia w `apps/storefront/src/`:
-- `lib/utils/constants.ts` — stałe biznesowe: `PHONE`, `LOCATION`, `FREE_SHIPPING_THRESHOLD_PLN = 450`, `AUTHORIZED_DISTRIBUTORS`, `FEATURED_BRANDS`
-- `lib/medusa/client.ts` — Medusa JS SDK client z publishable key + region pl z `.env.local`
-- `lib/products/variant-wiring.ts` — helper mapujący kombinację SKU+wiring na variant (5 wariantów BARE/W7/W13/M7/M13 wzorem briefu §1)
+Najgrubsza iteracja Fazy 3B — kaskadowa wyszukiwarka **Brand → Model → Generation** w hero strony głównej. Po wyborze 3 poziomów redirect do `/szukaj?vehicle_id=...`. Brief #3 §6, §5, §11.
+
+**Wymaga do startu:**
+1. **Link z Figmy** do hero z VehicleSelector (z mastera `bFOpp42bkgVtsOlzH3CSbb`)
+2. **Medusa client** — `lib/medusa/client.ts` z `@medusajs/js-sdk`, region pl, publishable key z env (do iter 3 odłożone)
+3. **Vehicle endpoints w Store API** — brief #1 wymienia `/store/vehicles/brands`, `/store/vehicles/brand/:id/models`, `/store/vehicles/model/:id/generations`. Sprawdzić w iteracji że istnieją w `apps/medusa/src/api/store/`.
+4. Backend MUSI być włączony (`docker compose up -d` + `cd apps/medusa && npm run dev`).
 
 **Pierwszy prompt do CC w nowej sesji:**
-> "Lecimy iteracja 3. Najpierw przeczytaj brief #3 §3 (constants) i §11 (variant-wiring), potem zaproponuj implementację każdego z 3 plików. Bez UI — czysto pluming. Test: importy w `page.tsx` żeby zobaczyć że TypeScript się kompiluje."
+> "Iteracja 5 — VehicleSelectorHero. Najpierw sprawdź czy backend Medusy ma endpointy `/store/vehicles/brands`, `/store/vehicles/brand/:id/models`, `/store/vehicles/model/:id/generations`. Potem stwórz `lib/medusa/client.ts` (Medusa JS SDK + publishable key z env). Potem `components/vehicle-selector-hero.tsx` (Client, 3 selecty kaskadowe, TanStack Query do fetchowania, submit → `/szukaj?vehicle_id=`). Wymagany link Figma do hero."
+
+**Decyzje wciąż OPEN (user, nie blokują):**
+- Domena (zahakowani.pl czy nowa) — przed Fazą 5
+- Design tokens z Figmy → podmiana w `tailwind.config.ts` (aktualnie placeholder MD3 indigo)
+- Logo SVG (głowa zwierzęcia + napis ZAHAKOWANI ze starej strony WP) — gdy user dostarczy, refaktor do `<Logo />` shared component (Header + Footer + MobileMenu używają)
 
 **Kamień milowy Fazy 1 osiągnięty:** `npx medusa exec ./src/scripts/test-workflows.ts` tworzy 3 produkty (Hak Skoda Octavia 3 z 5 wariantami, Bagażnik testowy z 1, Moduł uniwersalny z 1) widoczne w `/app`.
 
