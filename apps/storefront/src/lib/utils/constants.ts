@@ -23,6 +23,13 @@ export const ADDRESS_CITY = "83-240 Lubichowo"
 /** Forma krótka — np. dla badge "Wysyłka z Lubichowa" */
 export const LOCATION = "Lubichowo"
 
+// Godziny pracy
+export const BUSINESS_HOURS = "Pon – Pt: 6:00 – 18:00"
+
+// Marketing
+export const COMPANY_TAGLINE =
+  "Oferujemy haki holownicze do wszystkich aut. Działamy na terenie Polski i za granicą, wspierając serwisy, warsztaty i klientów indywidualnych."
+
 // Logistyka
 // TODO V1: przenieść do konfiguracji w admin (Faza 5/6)
 export const FREE_SHIPPING_THRESHOLD_PLN = 450

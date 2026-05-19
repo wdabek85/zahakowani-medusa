@@ -147,7 +147,7 @@ export default function HomePage() {
             </a>
           </p>
           <p className="mt-1">
-            Następna iteracja: <span className="font-medium text-secondary-700">4.1 — Footer, potem 5 — VehicleSelectorHero</span>.
+            Następna iteracja: <span className="font-medium text-secondary-700">5 — VehicleSelectorHero</span>.
           </p>
         </footer>
       </Container>

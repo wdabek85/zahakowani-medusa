@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Header, InfoBar, SubNav } from "@/components/layout"
+import { Footer, Header, InfoBar, SubNav } from "@/components/layout"
 import "../styles/globals.css"
 
 // TODO iteracja 28 (Performance audit): re-enable `next/font/google` Inter z
@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <SubNav />
         <main className="flex-1">{children}</main>
-        {/* TODO iteracja 4.1: <Footer /> */}
+        <Footer />
       </body>
     </html>
   )
