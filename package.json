@@ -16,5 +16,9 @@
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
     "docker:ps": "docker compose ps"
+  },
+  "overrides": {
+    "@types/react": "19.0.0",
+    "@types/react-dom": "19.0.0"
   }
 }
