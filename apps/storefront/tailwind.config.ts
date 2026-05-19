@@ -64,10 +64,23 @@ const config: Config = {
       screens: {
         "2xl": "1440px",
       },
+      // Container = 1440px canvas + 80px padding lewo/prawo na 2xl (per Figma).
+      // Content area na desktop = 1440 - 160 = 1280px (kolumna treści).
+      // Mniejsze ekrany: stopniowy padding (16px → 32px → 80px), max-width = breakpoint.
       container: {
         center: true,
-        padding: { DEFAULT: "1rem", lg: "2rem" },
-        screens: { "2xl": "1280px" },
+        padding: {
+          DEFAULT: "1rem",   // <md: 16px
+          md: "2rem",        // md+: 32px
+          "2xl": "5rem",     // 2xl+ (1440+): 80px po każdej stronie
+        },
+        screens: {
+          sm: "640px",
+          md: "768px",
+          lg: "1024px",
+          xl: "1280px",
+          "2xl": "1440px",
+        },
       },
     },
   },
