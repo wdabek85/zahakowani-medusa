@@ -390,15 +390,21 @@ Mechanika do zaimplementowania (pre-spec w historii czatu i w roadmapie Faza 6):
 
 ---
 
-## 11. Następne kroki (ten tydzień)
+## 11. Następne kroki (na 2026-05-19)
 
-1. **Dziś:** odpowiedz na 4-5 kluczowych decyzji w sekcji 7 (CMS, płatności, faktury, kategorie 2-3, hosting). Bez tych decyzji nie ruszamy briefów technicznych.
+**Stan:** Faza 1+2 zakończone. Przygotowanie do Fazy 3.
 
-2. **Jutro / pojutrze:** wrzuć brief #1 (`zahakowani-medusa-brief.md`) do Claude Code w projekcie Medusy. Zacznij generację modułów.
+1. **Brief #3** (`zahakowani-frontend-brief.md`) — w pisaniu w Claude w claude.ai na podstawie `RAPORT-FAZA-2.md` + tej sekcji §4 (mapa stron, user flows) + `tech-stack-guidelines.md` §§16-25 (Next.js stack, RSC, rendering, SEO).
 
-3. **Ten tydzień:** seed pierwszych danych (4 WiringEquipment + 10-20 Brand/Model/Generation z listy najczęściej sprzedawanych na Allegro).
+2. **Decyzja: domena** (§7) — `zahakowani.pl` czy nowa. Wpływa na meta tagi i `canonical` URLs już w Fazie 3.
 
-4. **Na koniec tygodnia:** wracaj z postępem, robimy razem brief #2 (admin UI) i konkretyzujemy resztę miesiąca 1.
+3. **Eksport tokenów designu z Figmy** — kolory / typografia / spacing / breakpoints → do `apps/storefront/tailwind.config.ts`. Bez tego CC użyje placeholder z Material Design 3.
+
+4. **Backend korekta** (CC autonomicznie po sygnale): currency EUR → PLN, region "Polska" + country PL + tax 23%, 1 placeholder shipping option.
+
+5. **Po dostarczeniu briefu #3:** CC otwiera repo, czyta `CLAUDE.md` (auto-load) + raporty Faz 1/2, zaczyna Fazę 3 iteracyjnie zgodnie z guidelines §28 (sekcja-po-sekcji, test po każdej).
+
+**Kamień milowy Fazy 3:** sklep przeklikany od strony głównej do koszyka (płatności w Fazie 4).
 
 ---
 

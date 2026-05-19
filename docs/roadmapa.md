@@ -1,4 +1,4 @@
-# Zahakowani — roadmapa realizacji (v1.2)
+# Zahakowani — roadmapa realizacji (v1.3, 2026-05-19)
 
 Plan krok po kroku od dziś do działającego sklepu. Każde zadanie ma status:
 
@@ -9,32 +9,47 @@ Plan krok po kroku od dziś do działającego sklepu. Każde zadanie ma status:
 
 ---
 
-## Stan obecny
+## Stan obecny (2026-05-19)
 
 **Faza 0 — Decyzje przed startem:** ✅ **ZAMKNIĘTA**
 
-**Etap 0.1 — Setup repo + środowisko deweloperskie (monorepo):** ⏳ **DO ZROBIENIA TERAZ**
+**Etap 0.1 — Setup repo + środowisko deweloperskie (monorepo):** ✅ **ZAMKNIĘTY** (repo na GitHub: wdabek85/zahakowani-medusa, Docker Postgres+Redis na porcie 55432, Medusa v2.15.2 zainicjalizowana)
 
-**Faza 1 — Backend Medusy:** 🔒 **CZEKA NA ZAKOŃCZENIE ETAPU 0.1**
+**Faza 1 — Backend Medusy:** ✅ **ZAKOŃCZONA** — 13 iteracji, raport: `docs/raports/RAPORT-FAZA-1.md`
+- 5 modułów domeny: vehicle_fitment, hook_catalog, wiring_equipment, bike_rack_catalog, standalone_wiring_catalog
+- 5 Module Links + 3 workflowy z compensate (createProductFromHook/BikeRack/StandaloneWiring)
+- 11 endpointów Store API (vehicle-fitment + by-vehicle + listings + SEO landing pages)
+- 4 helpery w `utils/catalog/` (generateProductTitle/SKU/handle/years-label)
+- Seedy: 4 WiringEquipment (W7/W13/M7/M13) + Skoda Octavia 3 + 3 test catalog items
 
-Wszystkie dokumenty gotowe (`zahakowani-medusa-brief.md` v2.1 + `zahakowani-tech-stack-guidelines.md` v1.0). Bloker techniczny: brak repo i lokalnego środowiska deweloperskiego.
+**Faza 2 — Admin UI:** ✅ **ZAKOŃCZONA** — 15 iteracji, raport: `docs/raports/RAPORT-FAZA-2.md`
+- 24 admin endpointy (CRUD per kategoria + publish-* + autocomplete + vehicle-fitment tree)
+- 5 UI Routes w `src/admin/routes/`: hooks, bike-racks, standalone-wiring, wiring-equipment, vehicles (drzewo CRUD)
+- 4 widgety na stronie produktu (catalog info per kategoria + fitment info)
+- 8 walidatorów Zod, **78 zautomatyzowanych asercji testowych PASSED**
+- Kamień milowy osiągnięty: wystawianie produktów przez UI w ~30s/produkt
+- **Demo katalog:** 4 haki dla 4 marek wystawione przez `src/scripts/seed-demo-hooks.ts` (Westfalia W/200 dla VW Golf 7, Brink B/305 dla Ford Focus 3, Steinhof S/410 dla BMW F30, Auto-Hak A/115 dla Skoda Octavia 3) — status `published`, 5 wariantów każdy, ceny rynkowe PLN
+
+**Faza 3 — Frontend Next.js MVP:** ⏳ **TERAZ** — brief #3 (`zahakowani-frontend-brief.md`) w pisaniu w Claude w claude.ai na podstawie `RAPORT-FAZA-2.md` + `plan-dzialania.md` §4 + `tech-stack-guidelines.md` §§16-25. Po dostarczeniu briefu CC zaczyna iteracyjnie (sekcja-po-sekcji wg guidelines §28).
+
+**Repo:** 35 commitów na `main`. Ostatni `8c72d40` ([CHORE] seed-demo-hooks).
 
 ---
 
 ## Przegląd faz
 
-| Etap | Co | Czas | Kamień milowy |
-|---|---|---|---|
-| **0** | Decyzje przed startem | ✅ zamknięta | Wszystkie decyzje podjęte |
-| **0.1** | Setup monorepo + Docker + GitHub | 1-2 dni | Klonujesz repo na drugiej maszynie i wszystko odpala |
-| **1** | Backend Medusy — schema i workflow | 2-3 tyg | Skrypt testowy tworzy 3 produkty z wariantami |
-| **2** | Admin UI — wystawianie produktów | 2-3 tyg | Wystawiasz produkt w 30s przez panel |
-| **3** | Frontend Next.js MVP | 4-6 tyg | Sklep przeklikany od listy do koszyka |
-| **4** | Integracje (płatności, kurier, faktury, email) | 2-3 tyg | Pełna transakcja testowa z fakturą |
-| **5** | Content + SEO + Launch | 2-3 tyg | Sklep żyje publicznie |
-| **6** | V1 — analityka, opinie, growth | non-stop po launchu | — |
+| Etap | Co | Stan | Czas | Kamień milowy |
+|---|---|---|---|---|
+| **0** | Decyzje przed startem | ✅ | zamknięta | Wszystkie decyzje podjęte |
+| **0.1** | Setup monorepo + Docker + GitHub | ✅ | zrobione | Repo + Docker działa |
+| **1** | Backend Medusy — schema i workflow | ✅ | zrobione (13 iteracji) | `test-workflows.ts` tworzy 3 produkty z wariantami |
+| **2** | Admin UI — wystawianie produktów | ✅ | zrobione (15 iteracji, 78 asercji PASSED) | Wystawianie przez panel w ~30s + 4 demo haki w bazie |
+| **3** | **Frontend Next.js MVP** | ⏳ **TERAZ** | 4-6 tyg | Sklep przeklikany od listy do koszyka |
+| **4** | Integracje (płatności, kurier, faktury, email) | 🔒 | 2-3 tyg | Pełna transakcja testowa z fakturą |
+| **5** | Content + SEO + Launch | 🔒 | 2-3 tyg | Sklep żyje publicznie |
+| **6** | V1 — analityka, opinie, growth | 🔒 | non-stop po launchu | — |
 
-**Razem do launchu:** ~4-5 miesięcy przy 20-25 h/tydzień solo.
+**Pozostało do launchu:** ~3-4 mies. (Fazy 3, 4, 5) przy 20-25 h/tydzień solo.
 
 ---
 
@@ -46,8 +61,10 @@ Wszystkie dokumenty gotowe (`zahakowani-medusa-brief.md` v2.1 + `zahakowani-tech
 | `zahakowani-plan-dzialania.md` | strategia, struktura serwisu, zakres MVP | ✅ aktualny |
 | `zahakowani-tech-stack-guidelines.md` | **stały kontekst dla CC — stack, konwencje, jak budować** | ✅ **v1.0 gotowy** |
 | `zahakowani-medusa-brief.md` | techniczna spec modeli Medusy | ✅ **v2.1 — gotowy do Claude Code (z seedami + skryptem)** |
-| `zahakowani-admin-ui-brief.md` | techniczna spec admin UI | ⬜ do napisania (Faza 2) |
-| `zahakowani-frontend-brief.md` | techniczna spec frontu Next.js | ⬜ do napisania (Faza 3) |
+| `zahakowani-admin-ui-brief.md` | techniczna spec admin UI | ✅ napisany + zrealizowany (Faza 2 zakończona) |
+| `zahakowani-frontend-brief.md` | techniczna spec frontu Next.js | ⏳ w pisaniu (Faza 3 — TERAZ) |
+| `zahakowani-raport-faza-1.md` | raport końcowy Fazy 1 | ✅ w `docs/raports/RAPORT-FAZA-1.md` |
+| `zahakowani-raport-faza-2.md` | raport końcowy Fazy 2 | ✅ w `docs/raports/RAPORT-FAZA-2.md` |
 
 ---
 
@@ -78,7 +95,7 @@ Wszystkie dokumenty gotowe (`zahakowani-medusa-brief.md` v2.1 + `zahakowani-tech
 
 ---
 
-## Etap 0.1 — Setup repo + środowisko deweloperskie ⏳ TERAZ
+## Etap 0.1 — Setup repo + środowisko deweloperskie ✅ ZAMKNIĘTY
 
 **Cel:** monorepo na GitHubie + lokalne środowisko Docker + projekt Medusy zainicjalizowany. Klonujesz repo na obu maszynach (stacjonarce i macbooku) i wszystko działa identycznie.
 
@@ -168,7 +185,17 @@ Po tym: wchodzisz w Fazę 1.
 
 ---
 
-## Faza 1 — Backend Medusy 🔒 CZEKA NA ETAP 0.1
+## Faza 1 — Backend Medusy ✅ ZAKOŃCZONA
+
+Patrz `docs/raports/RAPORT-FAZA-1.md` — pełny raport z 13 iteracji (1012 linii: pliki, modele, linki, workflowy, endpointy, seedy, testy, odstępstwa, problemy).
+
+**W skrócie:** 5 modułów domeny + 5 Module Links + 3 workflowy z compensate + 11 endpointów Store API + helpery + seedy. `test-workflows.ts` przeszedł, w bazie są 4 demo haki (status `published`).
+
+Historyczna treść poniżej zostawiona dla kontekstu:
+
+---
+
+### Faza 1 — szczegóły historyczne (zrealizowane)
 
 **Cel:** schema gotowa, workflow działa, można wystawić produkty wszystkich 3 kategorii przez API.
 
@@ -217,7 +244,17 @@ Po tym: wchodzisz w Fazę 1.
 
 ---
 
-## Faza 2 — Admin UI ⬜ DO ZROBIENIA
+## Faza 2 — Admin UI ✅ ZAKOŃCZONA
+
+Patrz `docs/raports/RAPORT-FAZA-2.md` — pełny raport z 15 iteracji (24 endpointy, 5 UI Routes, 4 widgety, 8 walidatorów Zod, 78 asercji testowych).
+
+**W skrócie:** wystawianie produktów przez UI w ~30s. Demo katalog: 4 marki (Skoda, VW, Ford, BMW) + 4 haki (Westfalia, Brink, Steinhof, Auto-Hak) wystawione przez `src/scripts/seed-demo-hooks.ts`, status `published`, 5 wariantów każdy.
+
+Historyczna treść poniżej zostawiona dla kontekstu:
+
+---
+
+### Faza 2 — szczegóły historyczne (zrealizowane)
 
 **Cel:** wystawianie produktów we wszystkich 3 kategoriach przez panel.
 
@@ -247,7 +284,7 @@ Po tym: wchodzisz w Fazę 1.
 
 ---
 
-## Faza 3 — Frontend Next.js MVP ⬜ DO ZROBIENIA
+## Faza 3 — Frontend Next.js MVP ⏳ TERAZ
 
 **Cel:** użytkownik może przeklikać sklep od strony głównej do koszyka.
 
@@ -255,7 +292,7 @@ Po tym: wchodzisz w Fazę 1.
 
 | Wymagane | Status |
 |---|---|
-| Faza 2 zakończona | 🔒 |
+| Faza 2 zakończona | ✅ |
 | **Brief #3 (frontend) napisany** | ⬜ |
 | Branding + design system | ✅ **Material Design w Figmie, gotowy** |
 | Domena | 🔒 do decyzji |
@@ -363,24 +400,24 @@ Po tym: wchodzisz w Fazę 1.
 
 ---
 
-## Twój następny ruch (TERAZ)
+## Twój następny ruch (TERAZ — 2026-05-19)
 
-**Faza 1 czeka na ukończenie etapu 0.1 (setup monorepo).**
+**Faza 3 (Frontend Next.js) — brief #3 w pisaniu w Claude w claude.ai.**
 
-Konkretnie tym tygodniu:
+Po ukończeniu briefu wrzucasz go do `docs/briefs/frontend-brief.md`, otwierasz CC w katalogu projektu i mówisz "Faza 3, iteracja 1" — CC będzie wiedział co robić (CLAUDE.md + raporty Fazy 1/2 + guidelines v1.3 są w repo).
 
-1. **Instalacja Docker Desktop** na stacjonarce — [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/), 15 min
-2. **Utworzenie prywatnego repo `zahakowani`** na GitHubie (bez README, .gitignore, license — to dostarczy CC)
-3. **Sklonowanie repo lokalnie** na stacjonarce (np. `~/projekty/zahakowani/`)
-4. **Otwarcie Claude Code** w katalogu projektu
-5. **Wrzucenie do CC** dokumentu `tech-stack-guidelines.md` jako kontekst + komenda inicjalizacji monorepo (treść w sekcji "Polecenie dla Claude Code" w etapie 0.1)
-6. **Test:** `docker compose up -d` + `cd apps/medusa && npm run dev` — backend Medusy powinien wstać na `http://localhost:9000`
-7. **Pierwszy commit** + push do GitHuba
-8. **W wolnej chwili:** sklonowanie repo na macbooku + powtórzenie kroku 6 żeby zweryfikować że odpala się identycznie
+**Niezależnie od briefu, do podjęcia decyzja:**
 
-Po ukończeniu etapu 0.1 — wrzucasz brief #1 v2.1 (oraz dalej trzymasz `tech-stack-guidelines.md` w kontekście CC) i ruszasz z Fazą 1.
+1. **Domena** (`plan-dzialania.md` §7) — `zahakowani.pl` (cutover ze starego WP) czy nowa? Wpływa na meta tagi SEO i `canonical` URLs w `generateMetadata()` na każdej stronie.
+2. **Eksport tokenów designu z Figmy** (kolory, typografia, spacing, breakpoints) → wpiszę do `apps/storefront/tailwind.config.ts`. Bez tego użyję placeholder z Material Design 3 defaults (do podmiany później).
 
-Po zakończeniu Fazy 1 wracasz z raportem (struktura plików, wynik skryptu testowego, screenshot z admin Medusy, ewentualne odstępstwa od briefu). Dopiero wtedy zaczynamy brief #2 (admin UI).
+**Backend do skorygowania przed Fazą 3** (CC może zrobić autonomicznie):
+
+- Currency `EUR` (z templatki Medusy) → `PLN` dla regionu Polska
+- Dodać region "Polska" + przypisać `pl` country + tax region VAT 23%
+- Dodać 1 placeholder shipping option (faktyczne InPost/DPD/DHL w Fazie 4)
+
+**Po dostarczeniu briefu #3 CC rusza z Fazą 3** zgodnie z guidelines §28 — sekcja-po-sekcji, test po każdej iteracji, commit `[FAZA-3] iteracja X: opis`.
 
 ---
 

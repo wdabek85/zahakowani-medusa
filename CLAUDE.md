@@ -16,7 +16,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 
 ---
 
-## Status projektu (na 2026-05-16)
+## Status projektu (na 2026-05-19)
 
 | Etap | Stan |
 |---|---|
@@ -24,7 +24,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 | Etap 0.1 — setup monorepo + Docker + GitHub | ✅ zamknięty |
 | **Faza 1 — backend Medusy (brief #1)** | ✅ **ZAKOŃCZONA** |
 | **Faza 2 — Admin UI (brief #2)** | ✅ **ZAKOŃCZONA** |
-| **Faza 3 — Frontend Next.js (brief #3, do napisania)** | ⏳ **NASTĘPNA** |
+| **Faza 3 — Frontend Next.js (brief #3 w pisaniu w Claude w claude.ai)** | ⏳ **TERAZ** |
 | Faza 4 — Integracje (płatności, kurier, faktury) | 🔒 |
 | Faza 5 — Content, SEO, launch | 🔒 |
 | Faza 6 — V1 (priorytet 1: B2B portal z progami rabatowymi) | 🔒 |
@@ -41,7 +41,24 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 - `react-hook-form ^7.76.0` + `@hookform/resolvers ^3.10.0` dodane do deps (jedyne nowe paczki)
 - `catalog-publish-button` jako sekcja w stronach edycji katalogów (brief §13 dopuszcza, lepsze UX niż osobny widget)
 
-**Następna faza:** Faza 3 — Frontend Next.js storefront. Brief #3 do napisania.
+**Demo katalog (po Fazie 2, commit `8c72d40`):** 4 marki (Skoda, VW, Ford, BMW) + 4 haki opublikowane przez `src/scripts/seed-demo-hooks.ts`:
+- W/200 Westfalia → VW Golf 7 (650-1050 PLN, 5y gwarancji)
+- B/305 Brink → Ford Focus 3 Kombi (550-950 PLN)
+- S/410 Steinhof → BMW F30 (1280-1680 PLN, kula automatyczna)
+- A/115 Auto-Hak → Skoda Octavia 3 (380-720 PLN)
+
+Każdy z 5 wariantami (BARE/W7/W13/M7/M13), inventory 10 szt/wariant. Plus 3 testowe produkty z initial seed (status `draft`) + 4 sample Medusy (status `published`). Łącznie 11 produktów w bazie.
+
+**Faza 3:** Frontend Next.js storefront. Brief #3 w pisaniu w Claude w claude.ai (2026-05-19). Po dostarczeniu briefu CC zaczyna iteracyjnie.
+
+**Przygotowania przed Fazą 3 (backend):**
+- Currency EUR → PLN (CC zrobi autonomicznie po sygnale: `setup-poland-region.ts`)
+- Region "Polska" + country PL + tax VAT 23%
+- 1 placeholder shipping option (Faza 4 doprecyzuje InPost/DPD/DHL)
+
+**Decyzje do podjęcia przed Fazą 3:**
+- Domena (zahakowani.pl czy nowa) — wpływa na meta tagi SEO i `canonical` URLs
+- Design tokens z Figmy (kolory/typografia/spacing) → `tailwind.config.ts`. Brak = placeholder Material Design 3.
 
 ---
 
