@@ -1,0 +1,28 @@
+/**
+ * Stałe biznesowe Zahakowani — single source of truth dla danych kontaktowych,
+ * adresu firmy i progów logistycznych (brief #3 §3).
+ *
+ * Używane przez: InfoBar, Header, Footer, /kontakt, /checkout, mail confirmation.
+ *
+ * V1 (Faza 6): część z tych wartości przenosimy do konfiguracji w admin
+ * (FREE_SHIPPING_THRESHOLD_PLN, AUTHORIZED_DISTRIBUTORS itd.).
+ */
+
+export const SITE_NAME = "Zahakowani.pl"
+
+// Kontakt
+export const PHONE = "+48 536 731 515"
+export const PHONE_HREF = "tel:+48536731515"
+
+export const EMAIL = "kontakt@zahakowani.pl"
+export const EMAIL_HREF = "mailto:kontakt@zahakowani.pl"
+
+// Adres firmy
+export const ADDRESS_STREET = "ul. Dworcowa 35"
+export const ADDRESS_CITY = "83-240 Lubichowo"
+/** Forma krótka — np. dla badge "Wysyłka z Lubichowa" */
+export const LOCATION = "Lubichowo"
+
+// Logistyka
+// TODO V1: przenieść do konfiguracji w admin (Faza 5/6)
+export const FREE_SHIPPING_THRESHOLD_PLN = 450
