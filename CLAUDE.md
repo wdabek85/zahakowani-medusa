@@ -16,7 +16,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 
 ---
 
-## Status projektu (na 2026-05-19)
+## Status projektu (na 2026-05-19, ostatnia sesja Fazy 3 iteracja 1)
 
 | Etap | Stan |
 |---|---|
@@ -24,10 +24,20 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 | Etap 0.1 — setup monorepo + Docker + GitHub | ✅ zamknięty |
 | **Faza 1 — backend Medusy (brief #1)** | ✅ **ZAKOŃCZONA** |
 | **Faza 2 — Admin UI (brief #2)** | ✅ **ZAKOŃCZONA** |
-| **Faza 3 — Frontend Next.js (brief #3 w pisaniu w Claude w claude.ai)** | ⏳ **TERAZ** |
+| **Faza 3 — Frontend Next.js (brief #3 gotowy)** | ⏳ **TERAZ — 1/31 iteracji** |
 | Faza 4 — Integracje (płatności, kurier, faktury) | 🔒 |
 | Faza 5 — Content, SEO, launch | 🔒 |
 | Faza 6 — V1 (priorytet 1: B2B portal z progami rabatowymi) | 🔒 |
+
+**Faza 3 — postęp:**
+| # | Iteracja | Commit | Stan |
+|---|---|---|---|
+| 0 | setup-poland-region.ts (backend prep: EUR→PLN, country PL, tax VAT 23%) | `6519728` | ✅ |
+| 1 | Setup apps/storefront — Next.js 15.1 + Tailwind + TS strict + path alias | `5abf552` | ✅ dev działa, build TODO §3G |
+| 2 | Atomy UI (shadcn/ui copy-paste + lucide-react) — NASTĘPNA | — | ⬜ |
+| 3 | Stałe biznesowe + variant-wiring helper + Medusa client | — | ⬜ |
+| 4 | Layout (Header + Footer + InfoBar) | — | ⬜ |
+| 5-31 | Strona po stronie wg briefu §18 (Fazy 3B-3H) | — | ⬜ |
 
 **Kamień milowy Fazy 1 osiągnięty:** `npx medusa exec ./src/scripts/test-workflows.ts` tworzy 3 produkty (Hak Skoda Octavia 3 z 5 wariantami, Bagażnik testowy z 1, Moduł uniwersalny z 1) widoczne w `/app`.
 
@@ -61,12 +71,33 @@ Każdy z 5 wariantami (BARE/W7/W13/M7/M13), inventory 10 szt/wariant. Plus 3 tes
 - `AUTHORIZED_DISTRIBUTORS = ["Imioła Hak-Pol"]` (hardcoded, V1: tabela Manufacturer)
 - `FEATURED_BRANDS`: Skoda, VW, Ford, Toyota, BMW, Audi, Renault, Opel (hardcoded top 8, V1: po analytics)
 
-**Pierwszy prompt do CC po wgraniu dokumentów (brief §18):**
-> "Mam wgrane 4 dokumenty. Implementuj iterację 1 z sekcji 18 briefu #3: Setup `apps/storefront/` — Next.js 15 + Tailwind + TS strict + shadcn init. Tokeny tailwinda pobierz z Figmy przez MCP. Tylko ta iteracja."
+**Iteracja 1 (Faza 3A) — co stworzone w `apps/storefront/`:**
+- `package.json` (workspace `@zahakowani/storefront`, Next 15.1.0 + React 19.0.0 exact)
+- `tsconfig.json` (strict + noUncheckedIndexedAccess + path alias `@/*`)
+- `tailwind.config.ts` z **placeholder** design tokens (Material Design 3 baseline — kolory primary indigo, secondary slate, accent amber). Podmień gdy będą tokeny z Figmy.
+- `next.config.js` (env defaults, `images.remotePatterns` dla placehold.co)
+- `.env.example` + `.env.local` (publishable key + region pl)
+- `src/app/{layout.tsx, page.tsx, not-found.tsx}` + `src/styles/globals.css`
+- ⚠️ `next/font/google` **wyłączony** (workaround prerendering bug — system fallback przez Tailwind `font-sans`)
 
-**Co wciąż OPEN (decyzje user przed Fazą 3 — nie blokuje startu, ale wpływa na SEO):**
-- Domena (`zahakowani.pl` czy nowa) → meta tagi i `canonical` URLs. Brief używa `zahakowani.pl` jako placeholder.
-- Backend korekta (EUR → PLN region) — CC może zrobić podczas iteracji 1 albo wcześniej. Brief tego wprost nie wymaga, ale Medusa SDK będzie zwracać ceny w region currency.
+**Iteracja 1 — ZNANY PROBLEM (do iteracji 28, Faza 3G Performance audit):**
+- `npm run build` rzuca `"Cannot read properties of null (reading 'useContext')"` w `styled-jsx` podczas prerenderingu `/404`
+- Przyczyna: **duplicate React w monorepo** — `apps/medusa` devDep React 18.3.1 (admin UI), `apps/storefront` React 19.0.0
+- Naprawa: webpack alias w `next.config.js` lub `overrides` w root `package.json` wymuszające single React instance
+- **Dev działa**, `npm run type-check` PASS, smoke testy HTTP 200/404 OK
+
+**Następna iteracja 2 (po sygnale usera):**
+- Atomy UI w `src/components/ui/`: Button, Input, Label, Badge, Card, Container (shadcn/ui copy-paste, nie npm install)
+- `lucide-react` dodać do deps (ikony — kompatybilne API z Heroicons z Figmy)
+- Variants buttonów: `primary | secondary | ghost | danger`, sizes: `sm | md | lg`
+- Każdy atom z `cn()` helper (className merge — `clsx` + `tailwind-merge` w `lib/utils/cn.ts`)
+
+**Pierwszy prompt do CC w nowej sesji (iteracja 2):**
+> "Kontynuuj Fazę 3 iteracja 2 — atomy UI w `apps/storefront/src/components/ui/`. shadcn/ui style (copy-paste, nie npm install). Plus `lib/utils/cn.ts` z `clsx` + `tailwind-merge`. Test: import w `page.tsx` przykładowy Button żeby zobaczyć że działa."
+
+**Decyzje wciąż OPEN (user, nie blokują startu):**
+- Domena (`zahakowani.pl` czy nowa) → meta tagi i `canonical` URLs (decyzja przed Fazą 5)
+- Design tokens z Figmy (kolory/typografia/spacing) → podmiana w `tailwind.config.ts`. Aktualnie placeholder Material Design 3.
 
 ---
 
