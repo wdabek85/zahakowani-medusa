@@ -103,6 +103,15 @@ export default function HomePage() {
             <Badge size="md" variant="primary">Z modułem 13-Pin</Badge>
             <Badge size="lg" variant="primary">+3 warianty</Badge>
           </div>
+
+          {/* Solid — variant tags na karcie produktu (Figma) */}
+          <p className="pt-2 text-sm text-secondary-500">Solid (variant tags na ProductCard):</p>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="solid-warning">ZESTAW</Badge>
+            <Badge variant="solid-primary">MODUL 13PIN</Badge>
+            <Badge variant="solid-success">W MAGAZYNIE</Badge>
+            <Badge variant="solid-error">PROMOCJA</Badge>
+          </div>
         </section>
 
         {/* Showcase — Card */}
