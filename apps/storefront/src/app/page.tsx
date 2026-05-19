@@ -14,18 +14,19 @@ import {
 } from "@/components/ui"
 
 /**
- * Iteracja 2 placeholder/showcase.
+ * Iteracje 2-4 placeholder/showcase.
  *
- * Strona główna w realnym layoucie powstanie w iteracji 6 (Faza 3B).
- * Tu showcase atomów UI z iteracji 2 — szybka wizualna weryfikacja że
- * Button/Input/Label/Badge/Card/Container + ikony lucide-react renderują się
- * poprawnie z design tokenami z `tailwind.config.ts`.
+ * Realna strona główna powstanie w iteracjach 5-11 (Faza 3B):
+ * VehicleSelectorHero, HeroSection, ProductCard grid, BrandsSection itd.
+ *
+ * Aktualnie: showcase atomów UI + walidacja layoutu (Header/InfoBar/SubNav
+ * z iteracji 4 wiszą nad tym contentem dzięki `src/app/layout.tsx`).
  */
 export default function HomePage() {
   const backendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL ?? "http://localhost:9000"
 
   return (
-    <main className="py-12">
+    <div className="py-12">
       <Container size="narrow" className="space-y-12">
         <header>
           <Badge variant="primary" className="mb-2">Faza 3 · Iteracja 2</Badge>
@@ -146,10 +147,10 @@ export default function HomePage() {
             </a>
           </p>
           <p className="mt-1">
-            Następna iteracja: <span className="font-medium text-secondary-700">3 — Medusa client + constants + variant-wiring helper</span>.
+            Następna iteracja: <span className="font-medium text-secondary-700">4.1 — Footer, potem 5 — VehicleSelectorHero</span>.
           </p>
         </footer>
       </Container>
-    </main>
+    </div>
   )
 }

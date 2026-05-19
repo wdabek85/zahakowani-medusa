@@ -1,10 +1,11 @@
 import type { Metadata } from "next"
+import { Header, InfoBar, SubNav } from "@/components/layout"
 import "../styles/globals.css"
 
-// TODO iteracja 2: re-enable `next/font/google` Inter z `display: swap`.
-// Wyłączone w iteracji 1 — Next 15.5.18 + React 19 ma issue prerenderingu
-// (React error #31 na /404 podczas `next build`). System font stack ze
-// `font-sans` z Tailwind jako fallback.
+// TODO iteracja 28 (Performance audit): re-enable `next/font/google` Inter z
+// `display: swap`. Wyłączone w iteracji 1 — Next 15.5.18 + React 19 ma issue
+// prerenderingu (React error #31 na /404 podczas `next build`). System font
+// stack ze `font-sans` z Tailwind jako fallback działa OK na dev.
 
 export const metadata: Metadata = {
   title: {
@@ -19,7 +20,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pl">
-      <body className="min-h-screen">{children}</body>
+      <body className="flex min-h-screen flex-col bg-white text-secondary-900">
+        <InfoBar />
+        <Header />
+        <SubNav />
+        <main className="flex-1">{children}</main>
+        {/* TODO iteracja 4.1: <Footer /> */}
+      </body>
     </html>
   )
 }
