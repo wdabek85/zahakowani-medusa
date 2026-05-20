@@ -174,6 +174,12 @@ Jeśli będziesz inicjalizować nowy projekt Medusy — CLI tworzy `apps/<name>/
 
 ---
 
+## Setup na drugim komputerze (laptop)
+
+Jeśli stawiasz projekt na innym komputerze (np. laptop oprócz PC), użyj **`docs/setup-laptop.md`** — pełna instrukcja krok po kroku: co zainstalować, jakie pliki `.env` przenieść z PC (eksport), jak postawić bazę (seed vs dump), workflow git pull/push i troubleshooting znanych problemów.
+
+---
+
 ## Pierwsze uruchomienie po zalogowaniu (jeśli komputer był wyłączony)
 
 ```powershell
