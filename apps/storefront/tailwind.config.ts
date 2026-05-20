@@ -1,12 +1,9 @@
 import type { Config } from "tailwindcss"
 
 /**
- * Placeholder tokens — Material Design 3 baseline (neutral + indigo primary).
- * Podmień na realne tokeny z Figmy (`bFOpp42bkgVtsOlzH3CSbb`) gdy CC pobierze
- * je przez MCP `get_variable_defs` w przyszłej iteracji.
- *
- * Konwencja per brief #3 §3: kolory jako palety 50-900, fontSize/spacing/radius
- * extended (nie nadpisywanie defaults).
+ * Tokens. Primary = Blue (per Figma `bFOpp42bkgVtsOlzH3CSbb`, variables Blue-800/900).
+ * Shades 50-700 = Tailwind blue palette; 800/900 overridden to the exact Figma values.
+ * Other palettes still placeholder MD3 — refine as Figma exposes more variables.
  */
 const config: Config = {
   content: ["./src/**/*.{ts,tsx,mdx}"],
@@ -14,17 +11,17 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          50: "#eef2ff",
-          100: "#e0e7ff",
-          200: "#c7d2fe",
-          300: "#a5b4fc",
-          400: "#818cf8",
-          500: "#6366f1",
-          600: "#4f46e5",
-          700: "#4338ca",
-          800: "#3730a3",
-          900: "#312e81",
-          DEFAULT: "#4f46e5",
+          50: "#eff6ff",
+          100: "#dbeafe",
+          200: "#bfdbfe",
+          300: "#93c5fd",
+          400: "#60a5fa",
+          500: "#3b82f6",
+          600: "#2563eb",
+          700: "#1d4ed8",
+          800: "#193cb8",
+          900: "#1c398e",
+          DEFAULT: "#2563eb",
         },
         secondary: {
           50: "#f8fafc",
@@ -50,7 +47,10 @@ const config: Config = {
         warning: { DEFAULT: "#f59e0b", 50: "#fffbeb", 500: "#f59e0b", 600: "#d97706" },
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        // Loaded via <link> in src/app/layout.tsx (next/font still disabled — see layout note).
+        sans: ["Roboto", "Inter", "system-ui", "-apple-system", "sans-serif"],
+        heading: ["Roboto", "Inter", "system-ui", "sans-serif"],
+        cta: ["Poppins", "Inter", "system-ui", "sans-serif"],
       },
       fontSize: {
         "display-lg": ["3.5rem", { lineHeight: "1.1", letterSpacing: "-0.02em" }],

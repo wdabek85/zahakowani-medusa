@@ -2,16 +2,50 @@ import { ArrowRight, Check, Rocket } from "lucide-react"
 import {
   Badge,
   Button,
-  Card,
-  CardBody,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
   Container,
   Input,
   Label,
 } from "@/components/ui"
+import { ProductCard, type ProductCardProduct } from "@/components/product"
+
+const PRODUCT_CARD_DEMO: ProductCardProduct[] = [
+  {
+    handle: "hak-westfalia-w-200-vw-golf-7",
+    title: "Hak holowniczy + Moduł 13-Pin VW Golf 7 2012-2019 1500KG",
+    subtitle: "Golf 7, VW, Kompletne Haki Holownicze (Belka + Kula)",
+    thumbnail: "https://placehold.co/600x600/eef2ff/1c398e?text=W/200",
+    price: 1050,
+    rating: 5,
+    reviewsCount: 12,
+  },
+  {
+    handle: "hak-brink-b-305-ford-focus-3-kombi",
+    title: "Hak holowniczy + Moduł 13-Pin Ford Focus 3 Kombi 2011-2018 1800KG",
+    subtitle: "Focus 3, Ford, Kompletne Haki Holownicze (Belka + Kula)",
+    thumbnail: "https://placehold.co/600x600/eef2ff/1c398e?text=B/305",
+    price: 950,
+    rating: 4,
+    reviewsCount: 3,
+  },
+  {
+    handle: "hak-steinhof-s-410-bmw-f30",
+    title: "Hak holowniczy + Moduł 13-Pin BMW Seria 3 F30 2012-2019 2000KG",
+    subtitle: "Seria 3, BMW, Haki Automatyczne (Belka + Kula)",
+    thumbnail: "https://placehold.co/600x600/eef2ff/1c398e?text=S/410",
+    price: 1680,
+    rating: 5,
+    reviewsCount: 1,
+  },
+  {
+    handle: "hak-auto-hak-a-115-skoda-octavia-3",
+    title: "Hak holowniczy + Moduł 7-Pin Skoda Octavia 3 2013-2019 1500KG",
+    subtitle: "Octavia 3, Skoda, Kompletne Haki Holownicze (Belka + Kula)",
+    thumbnail: "https://placehold.co/600x600/eef2ff/1c398e?text=A/115",
+    price: 720,
+    rating: 4,
+    reviewsCount: 8,
+  },
+]
 
 /**
  * Iteracje 2-4 placeholder/showcase.
@@ -115,28 +149,17 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Showcase — Card */}
+        {/* ProductCard — compact variant (home Polecane / PDP Powiązane). */}
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold text-secondary-900">Card</h2>
-          <Card>
-            <CardHeader>
-              <CardTitle>Hak Westfalia W/200</CardTitle>
-              <CardDescription>VW Golf 7 (2012–2019) · uciąg 1500 kg</CardDescription>
-            </CardHeader>
-            <CardBody>
-              <p className="text-sm text-secondary-700">
-                Przykładowa karta — w iteracji 7 ProductCard dostanie galerię,
-                ikony parametrów, badge wariantów i AddToCart.
-              </p>
-            </CardBody>
-            <CardFooter className="justify-between">
-              <div>
-                <p className="text-2xl font-semibold text-secondary-900">650,00 zł</p>
-                <p className="text-xs text-secondary-500">cena zawiera 23% VAT</p>
-              </div>
-              <Button>Zobacz produkt</Button>
-            </CardFooter>
-          </Card>
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-xl font-semibold text-secondary-900">Polecane produkty</h2>
+            <span className="text-sm text-secondary-500">iteracja 7 · Figma 405:1311</span>
+          </div>
+          <div className="flex flex-wrap gap-4">
+            {PRODUCT_CARD_DEMO.map((product) => (
+              <ProductCard key={product.handle} product={product} />
+            ))}
+          </div>
         </section>
 
         <footer className="border-t border-secondary-200 pt-6 text-sm text-secondary-500">

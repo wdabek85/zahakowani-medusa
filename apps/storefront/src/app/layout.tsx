@@ -20,7 +20,17 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pl">
-      <body className="flex min-h-screen flex-col bg-white text-secondary-900">
+      <head>
+        {/* Roboto (text/headings) + Poppins (CTAs) per Figma. Plain <link> instead
+            of next/font until prerendering issue is resolved (see note above). */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@500;600&display=swap"
+        />
+      </head>
+      <body className="flex min-h-screen flex-col bg-white font-sans text-secondary-900">
         <InfoBar />
         <Header />
         <SubNav />
