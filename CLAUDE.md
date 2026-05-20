@@ -16,7 +16,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 
 ---
 
-## Status projektu (2026-05-20, koniec sesji 5 — ProductCard LEAN + setup na drugim komputerze)
+## Status projektu (2026-05-20, koniec sesji 5 — iter 5 VehicleSelectorHero + 7 LEAN ProductCard)
 
 | Etap | Stan |
 |---|---|
@@ -24,7 +24,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 | Etap 0.1 — setup monorepo + Docker + GitHub | ✅ zamknięty |
 | **Faza 1 — backend Medusy (brief #1)** | ✅ **ZAKOŃCZONA** |
 | **Faza 2 — Admin UI (brief #2)** | ✅ **ZAKOŃCZONA** |
-| **Faza 3 — Frontend Next.js (brief #3 gotowy)** | ⏳ **TERAZ — 4.1 + 7 LEAN out-of-order / 31 iteracji** |
+| **Faza 3 — Frontend Next.js (brief #3 gotowy)** | ⏳ **TERAZ — 5/31 + 7 LEAN out-of-order** |
 | Faza 4 — Integracje (płatności, kurier, faktury) | 🔒 |
 | Faza 5 — Content, SEO, launch | 🔒 |
 | Faza 6 — V1 (priorytet 1: B2B portal z progami rabatowymi) | 🔒 |
@@ -39,9 +39,9 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 | 3 LEAN | constants.ts (PHONE/EMAIL/ADDRESS/threshold) — bez Medusa client, bez variant-wiring | `6780e79` | ✅ Medusa client + wiring odłożone do iter 5/7 |
 | 4 | Nav 3-warstwowa: InfoBar + Header + SubNav + MobileMenu (drawer) | `5e4a77c` | ✅ + fix container 1440px/80px padding (`16ad52b`) |
 | 4.1 | Footer 5-kolumnowy + bottom bar (wzór WP, brak Figmy footera) | `3a2350e` | ✅ + fix grid 5 równych kolumn (`09d89e8`) |
-| **5** | **🔥 VehicleSelectorHero (kaskada Brand→Model→Generation) — NASTĘPNA** | — | ⬜ Wymaga Medusa client + variant-wiring |
-| 6 | BrandsSection / HeroSection / pozostałe sekcje home | — | ⬜ |
-| **7 LEAN** | **ProductCard kompaktowy (Figma 405:1311) — out-of-order, bez Medusa wiring** | `beb9545` | ✅ Visual layer + props; data wiring odłożony do iter 5/7-full |
+| **5** | **VehicleSelectorHero + HeroSection (Figma 407:1330 + 407:1435), Medusa client + TanStack Query setup** | `d354b50` | ✅ |
+| 6 | BrandsSection / pozostałe sekcje home (poniżej hero) | — | ⬜ NASTĘPNA |
+| **7 LEAN** | **ProductCard kompaktowy (Figma 405:1311) — out-of-order, bez Medusa wiring** | `beb9545` | ✅ Visual layer + props; data wiring odłożony do iter 7-full |
 | 8-31 | Listingi + PDP + checkout + cleanup (brief §18) | — | ⬜ |
 
 **Iteracja 3 LEAN — co zrobione (sesja 4, 2026-05-19, commit `6780e79`):**
@@ -100,18 +100,45 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 - Backend `:9000/health` = OK, `/app` = 200, `/store/regions` z publishable key zwraca Polska/PLN ✓
 - Storefront `:8000/` = 200 ✓
 
-**🔥 NASTĘPNA SESJA — iteracja 5: VehicleSelectorHero**
+**Iteracja 5 — co zrobione (sesja 5, 2026-05-20, commit `d354b50`):**
 
-Najgrubsza iteracja Fazy 3B — kaskadowa wyszukiwarka **Brand → Model → Generation** w hero strony głównej. Po wyborze 3 poziomów redirect do `/szukaj?vehicle_id=...`. Brief #3 §6, §5, §11.
+Najgrubsza iteracja Fazy 3B zamknięta. Setup data layer + dwa nowe komponenty + paleta accent.
 
-**Wymaga do startu:**
-1. **Link z Figmy** do hero z VehicleSelector (z mastera `bFOpp42bkgVtsOlzH3CSbb`)
-2. **Medusa client** — `lib/medusa/client.ts` z `@medusajs/js-sdk`, region pl, publishable key z env (do iter 3 odłożone)
-3. **Vehicle endpoints w Store API** — brief #1 wymienia `/store/vehicles/brands`, `/store/vehicles/brand/:id/models`, `/store/vehicles/model/:id/generations`. Sprawdzić w iteracji że istnieją w `apps/medusa/src/api/store/`.
-4. Backend MUSI być włączony (`docker compose up -d` + `cd apps/medusa && npm run dev`).
+- `src/lib/medusa/client.ts` — `medusaConfig` + `medusaFetch<T>()` z headerem `x-publishable-api-key`, `MedusaFetchError` z status/url. SDK (`@medusajs/js-sdk`) pominięty — vehicle-fitment to custom endpointy, dodamy SDK przy cart/checkout
+- `src/lib/medusa/queries.ts` — `useBrands` / `useModels(brandCode)` / `useGenerations(modelId)` z TanStack Query, `enabled` flags dla cascadingu, `staleTime 5min`. Typowane interfaces: `Brand`, `Model`, `Generation`
+- `src/app/providers.tsx` (Client) — `QueryClientProvider` z `staleTime 60s`, `refetchOnWindowFocus off`, `retry 1`. `layout.tsx` wraps children
+- `@tanstack/react-query ^5.64.2` dodany do storefront workspace (hoisted do root node_modules przez npm workspaces)
+- `tailwind.config.ts` — paleta `accent` z amber MD3 → Tailwind orange + override `600 = #F54900` z Figmy (Orange-600). Pełna paleta 50-900 dla flexibility
+- `src/components/hero/vehicle-selector.tsx` (Client, per Figma 407:1330 Wariant=Hero):
+  - 3 `StepRow` komponenty z numbered pill (1/2/3): active=bg-accent-600 (orange), selected=bg-secondary-300 (gray), disabled=opacity-60
+  - **Native `<select>` warstwowany absolutely z opacity-0** — handles clicks, pokazuje natywny picker na mobile (best UX, accessible, brak custom dropdown library)
+  - Reset cascade: zmiana brand → czyszczenie model+generation; zmiana model → czyszczenie generation
+  - SZUKAJ button disabled dopóki generation nie wybrana, primary-800. Submit → `router.push('/szukaj?vehicle_id={generation.id}')`
+- `src/components/hero/hero-section.tsx` (Server, per Figma 407:1435):
+  - Layout `flex justify-between` na lg+, vertical stack na mobile
+  - Tło `bg-gradient-to-br from-secondary-200 to-primary-50` — placeholder do podmiany na photo
+  - Lewa: VehicleSelector; prawa: headline `"Haki holownicze do każdego auta"` + sub `"Wybierz markę, model i rocznik — pokażemy tylko pasujące produkty."` + CTA orange "Sprawdź ofertę" linkujący do `/szukaj`
+  - **Copy z Figmy ("GET UP TO On All Engine Oil Products") był placeholderem z innego template'u** — zastąpiony polskim
+- `src/components/hero/index.ts` — barrel
+- `src/app/page.tsx` — `<HeroSection />` na samej górze (poza Container, full-width), reszta showcase atomów + ProductCard zostaje jako sandbox
 
-**Pierwszy prompt do CC w nowej sesji:**
-> "Iteracja 5 — VehicleSelectorHero. Najpierw sprawdź czy backend Medusy ma endpointy `/store/vehicles/brands`, `/store/vehicles/brand/:id/models`, `/store/vehicles/model/:id/generations`. Potem stwórz `lib/medusa/client.ts` (Medusa JS SDK + publishable key z env). Potem `components/vehicle-selector-hero.tsx` (Client, 3 selecty kaskadowe, TanStack Query do fetchowania, submit → `/szukaj?vehicle_id=`). Wymagany link Figma do hero."
+**SPROSTOWANIE: faktyczne ścieżki Store API vehicle-fitment** (CLAUDE.md sesji 4 podawała inne):
+- `GET /store/vehicle-fitment/brands` → `{ brands: [{ id, code, name, logo_url, product_count }] }`
+- `GET /store/vehicle-fitment/brands/{brandCode}/models` → `{ brand: {...}, models: [{ id, code, name, product_count }] }` (po **brandCode**, nie brandId!)
+- `GET /store/vehicle-fitment/models/{modelId}/generations` → `{ brand, model, generations: [{ id, code, name, year_from, year_to, body_type, years_label, product_count }] }`
+- Plus: `/store/vehicle-fitment/lookup`, `/store/products/by-vehicle/{generationId}`, `/store/landing/{brandCode}/{modelCode}/{generationCode}`, `/store/categories/{hooks|bike-racks|standalone-wiring}/products`
+
+**Smoke verified:**
+- `GET /` → 200, HTML zawiera headline + 3 step labels + "SZUKAJ" + "Sprawdź ofertę"
+- Submit selektora: `GET /szukaj?vehicle_id=01KS2EXJ6YMKZREVF06TSFRP78` (realny `generation.id` z bazy) → 404 oczekiwane bo strona `/szukaj` w iteracji 11+
+
+**🔥 NASTĘPNA SESJA — iteracja 6:**
+
+BrandsSection (logo 8 marek pod hero, brief §6 FEATURED_BRANDS) + pozostałe sekcje strony głównej powyżej "Polecane produkty". Brief #3 §6.
+
+**Decyzje OPEN do follow-up:**
+- Hero background photo (Figma node `imgRozmiarDesktop` = kierownica/auto z prawej) — user dostarczy assets w późniejszej iteracji
+- Copy hero (headline + CTA) — moja propozycja PL, do akceptacji w review
 
 **Decyzje wciąż OPEN (user, nie blokują):**
 - Domena (zahakowani.pl czy nowa) — przed Fazą 5
