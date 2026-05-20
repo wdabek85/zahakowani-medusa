@@ -31,6 +31,9 @@ export function HeroSection() {
           <p className="font-heading text-lg leading-snug text-secondary-700 sm:text-xl lg:text-2xl">
             Wybierz markę, model i rocznik — pokażemy tylko pasujące produkty.
           </p>
+          {/* TODO(wiring): target docelowy do ustalenia z userem — opcje: /szukaj
+              (ogólny katalog) vs /sklep (lista wszystkich produktów) vs konkretna
+              kategoria (/kategorie/haki) vs strona promo (/oferta). Patrz docs/cta-registry.md */}
           <Link
             href="/szukaj"
             className="inline-flex items-center justify-center border border-accent-600 bg-accent-600 px-6 py-2 font-cta text-base font-medium uppercase leading-[26px] text-white transition-colors hover:bg-accent-700"

@@ -128,6 +128,8 @@ export function VehicleSelector({ className }: { className?: string }) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!generation) return
+    // TODO(wiring): strona /szukaj jeszcze nie istnieje (iter 11 — listing wyników).
+    // Po implementacji odczyta `vehicle_id` z URL i wywoła /store/products/by-vehicle/{id}.
     router.push(`/szukaj?vehicle_id=${generation.id}`)
   }
 

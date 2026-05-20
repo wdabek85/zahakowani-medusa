@@ -13,6 +13,9 @@ import { MobileMenu } from "./mobile-menu"
  * Desktop (md+): logo + CTA Poradniki + search bar + Pomoc + user + cart z sumą.
  * Mobile (<md): hamburger + logo + search icon + user + cart (kompaktowy).
  *
+ * TODO(wiring): 5 linków bez strony docelowej — /poradniki, /kontakt, /szukaj,
+ * /konto, /koszyk. Szczegóły i decyzje per-link w docs/cta-registry.md.
+ *
  * TODO iteracja 21-22: integracja `cartItemCount` i `cartTotalFormatted`
  * z Medusa cart state (TanStack Query subscription do cart cookie).
  *

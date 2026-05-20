@@ -22,6 +22,9 @@ type MobileMenuProps = {
  * Features: Esc do zamknięcia, click on backdrop do zamknięcia, body scroll
  * lock gdy otwarty, ARIA `aria-hidden` na drawer'ze gdy zamknięty.
  *
+ * TODO(wiring): /poradniki + linki kategorii z `NAV_CATEGORIES` (te same co
+ * w Header/SubNav). Patrz docs/cta-registry.md.
+ *
  * TODO V1 (a11y audit): focus trap + return focus na trigger po zamknięciu.
  * Aktualnie wystarczy dla MVP — focus nie jest "uwieziony" w drawer'ze.
  */

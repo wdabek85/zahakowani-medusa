@@ -8,7 +8,10 @@ import { NAV_CATEGORIES } from "./nav-data"
  *
  * Desktop only — na mobile (<md) zwija się w hamburger menu (`MobileMenu`).
  *
- * TODO iteracja 5/11: dropdown mega-menu po hover/klik na elementach
+ * TODO(wiring): linki kategorii z `NAV_CATEGORIES` — strony kategorii nie
+ * istnieją (TBD-page). Implementacja w iter 11 (listingi). Patrz docs/cta-registry.md.
+ *
+ * TODO iteracja 11: dropdown mega-menu po hover/klik na elementach
  * z `hasDropdown: true` (marki + szybki dostęp do popularnych modeli).
  */
 export function SubNav() {

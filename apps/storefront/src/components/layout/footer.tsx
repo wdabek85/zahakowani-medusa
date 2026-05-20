@@ -19,6 +19,10 @@ import { FOOTER_LINK_GROUPS } from "./nav-data"
  *
  * Wzorowany na obecnym sklepie WP (Figma jeszcze nie ma footera w master file).
  *
+ * TODO(wiring): linki z `FOOTER_LINK_GROUPS` (Obsługa Klienta / O nas / Katalog) —
+ * większość TBD-page, do implementacji w Fazie 5 (content + SEO).
+ * Patrz docs/cta-registry.md.
+ *
  * TODO: gdy user dostarczy SVG/PNG logo (głowa zwierzęcia + napis), wyniesć
  * tekstowe "ZAHAKOWANI" do osobnego `<Logo />` komponentu (Header + Footer
  * używają wtedy tego samego brandmark'u).

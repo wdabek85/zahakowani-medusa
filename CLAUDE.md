@@ -332,6 +332,15 @@ E:\zahakowani-medusa\
 - **Nie hardkoduj** danych testowych w produkcyjnym kodzie — seedy w migracjach lub `src/scripts/`.
 - **Nie nadpisuj** konwencji Medusy bez wyraźnego powodu (jeśli musisz — komentarz w commicie).
 
+### CTA / Link Registry (`docs/cta-registry.md`)
+
+**Każdy link/CTA z TBD target lub TBD page** trafia do `docs/cta-registry.md` (tabela: lokalizacja, tekst, target, status) **+** ma komentarz `// TODO(wiring): ...` nad linią w kodzie. Konwencja:
+
+- `TODO(wiring):` — grepowalny tag dla linków/przycisków wymagających podpięcia
+- Gdy dodajesz nowy link bez gotowej strony / akcji → tag w kodzie + wpis w rejestrze
+- Gdy decyzja zapada → usuń tag, zmień href, update status w tabeli na DONE
+- `mailto:`, `tel:`, external (Google Fonts itp.) **pomijasz** — nie wymagają wiringu
+
 ---
 
 ## Workflow pracy z userem (PRZECZYTAJ — łatwo zepsuć)

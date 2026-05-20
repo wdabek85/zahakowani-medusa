@@ -7,6 +7,10 @@ import { cn } from "@/lib/utils/cn"
  * Compact product card — used on home page (Polecane) and PDP (Powiązane).
  * Listing/search pages get a separate, wider component.
  * Reference: Figma `bFOpp42bkgVtsOlzH3CSbb` node 405:1311.
+ *
+ * TODO(wiring): (a) cała karta linkuje do `/produkt/{handle}` — strona PDP
+ * w iter 13+. (b) Visual CTA "Kup Teraz" docelowo ma triggerować add-to-cart
+ * zamiast nawigacji (wymaga useCart + stop propagation). Patrz docs/cta-registry.md.
  */
 
 export interface ProductCardProduct {
