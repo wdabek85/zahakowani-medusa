@@ -16,7 +16,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 
 ---
 
-## Status projektu (2026-05-19, koniec sesji 4 — Layout MVP gotowy: nav 3-warstwowa + Footer)
+## Status projektu (2026-05-20, koniec sesji 5 — ProductCard LEAN + setup na drugim komputerze)
 
 | Etap | Stan |
 |---|---|
@@ -24,7 +24,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 | Etap 0.1 — setup monorepo + Docker + GitHub | ✅ zamknięty |
 | **Faza 1 — backend Medusy (brief #1)** | ✅ **ZAKOŃCZONA** |
 | **Faza 2 — Admin UI (brief #2)** | ✅ **ZAKOŃCZONA** |
-| **Faza 3 — Frontend Next.js (brief #3 gotowy)** | ⏳ **TERAZ — 4.1/31 iteracji** |
+| **Faza 3 — Frontend Next.js (brief #3 gotowy)** | ⏳ **TERAZ — 4.1 + 7 LEAN out-of-order / 31 iteracji** |
 | Faza 4 — Integracje (płatności, kurier, faktury) | 🔒 |
 | Faza 5 — Content, SEO, launch | 🔒 |
 | Faza 6 — V1 (priorytet 1: B2B portal z progami rabatowymi) | 🔒 |
@@ -39,8 +39,10 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 | 3 LEAN | constants.ts (PHONE/EMAIL/ADDRESS/threshold) — bez Medusa client, bez variant-wiring | `6780e79` | ✅ Medusa client + wiring odłożone do iter 5/7 |
 | 4 | Nav 3-warstwowa: InfoBar + Header + SubNav + MobileMenu (drawer) | `5e4a77c` | ✅ + fix container 1440px/80px padding (`16ad52b`) |
 | 4.1 | Footer 5-kolumnowy + bottom bar (wzór WP, brak Figmy footera) | `3a2350e` | ✅ + fix grid 5 równych kolumn (`09d89e8`) |
-| **5** | **🔥 VehicleSelectorHero (kaskada Brand→Model→Generation) — NASTĘPNA** | — | ⬜ Wymaga link Figma + Medusa client + variant-wiring |
-| 6-31 | Reszta home + listingi + PDP + checkout + cleanup (briefu §18) | — | ⬜ |
+| **5** | **🔥 VehicleSelectorHero (kaskada Brand→Model→Generation) — NASTĘPNA** | — | ⬜ Wymaga Medusa client + variant-wiring |
+| 6 | BrandsSection / HeroSection / pozostałe sekcje home | — | ⬜ |
+| **7 LEAN** | **ProductCard kompaktowy (Figma 405:1311) — out-of-order, bez Medusa wiring** | `beb9545` | ✅ Visual layer + props; data wiring odłożony do iter 5/7-full |
+| 8-31 | Listingi + PDP + checkout + cleanup (brief §18) | — | ⬜ |
 
 **Iteracja 3 LEAN — co zrobione (sesja 4, 2026-05-19, commit `6780e79`):**
 - `apps/storefront/src/lib/utils/constants.ts` — SITE_NAME, PHONE/PHONE_HREF, EMAIL/EMAIL_HREF, ADDRESS_STREET, ADDRESS_CITY, LOCATION, BUSINESS_HOURS, COMPANY_TAGLINE, FREE_SHIPPING_THRESHOLD_PLN
@@ -68,6 +70,36 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 - **Decyzje:** logo footera = tylko tekst (refaktor do `<Logo />` gdy user dostarczy SVG); pominięte "atrivo" credit (to obecna agencja WP)
 - Tło `bg-secondary-900` (#0f172a slate-dark, nie pure black) — gdy user da tokens z Figmy podmieniamy
 
+**Iteracja 7 LEAN — co zrobione (sesja 5, 2026-05-20, commit `beb9545`):**
+- `apps/storefront/src/components/product/product-card.tsx` (Server) — kompaktowa karta 232px wg Figma node `405:1311`:
+  - Image 1:1 (`next/image` z `unoptimized` na razie) + 5 gwiazdek (`lucide-react/Star`) + count + info icon
+  - Title (Roboto Bold 14/16) + subtitle (Roboto 10/12, opcjonalne)
+  - Price (Roboto Bold 36/44) formatted przez `Intl.NumberFormat("pl-PL", currency PLN)` + VAT disclaimer
+  - "Kup do HH:00, dostawa następnego dnia." (cutoffHour prop, default 14)
+  - CTA "Kup Teraz" — `bg-primary-800 border-primary-900` (Figma Blue-800/900), Poppins Medium 16
+- `apps/storefront/src/components/product/index.ts` — barrel
+- **Cała karta jako `<Link>` do `/produkt/{handle}`**; CTA jest `<span aria-hidden>` (uniknij invalid `<button>` w `<a>`); add-to-cart dodamy w iteracji checkout
+- **Out-of-order**: skok z 4.1 na 7 LEAN, bo user dał link Figma do tego komponentu. Iteracja 5 (VehicleSelectorHero) wciąż NASTĘPNA
+- **LEAN bo:** brak Medusa client wiring (price/thumbnail/rating z props zamiast `/store/products`), brak variant tags badge, brak AddToCart. Pełna iter 7 ("ProductCard z dataflow") po iter 5 gdy podepniemy `lib/medusa/client.ts`
+- `tailwind.config.ts` — **paleta `primary` podmieniona** z indigo MD3 na Tailwind blue + override `800 = #193cb8`, `900 = #1c398e` z Figmy (variable_defs Blue-800/Blue-900). `fontFamily.heading = Roboto`, `fontFamily.cta = Poppins` z fallback Inter→system-ui
+- `src/app/layout.tsx` — Google Fonts via `<link>` (Roboto 400/500/700 + Poppins 500/600). **next/font wciąż wyłączony** (workaround prerendering bug do iter 28)
+- `src/app/page.tsx` — showcase Card (placeholder z iter 2) zastąpiony przez `<ProductCard /> × 4` z mockami inspirowanymi seedem (W/200, B/305, S/410, A/115). Placeholder thumbnails z `placehold.co`
+
+**Sesja 5 — setup na drugim komputerze (MacBook M4):**
+- Sklonowane repo do `~/dev/zahakowani-medusa` (Mac path; nie `E:\` jak PC). Wszystkie skrypty operujące na cwd działają, bo używają względnych ścieżek
+- Docker Desktop 4.74.0 dla Apple Silicon zainstalowane. **Pułapka:** fresh install ma bug socket-leak w `com.docker.backend services` (zassało 61k file descriptors do limitu `kern.maxfilesperproc=61440`). Symptom: GUI wisi na "Starting...", `docker info` zawiesza się na sekcji Server. Naprawa: `killall -9 "com.docker.backend"` + `open -a "Docker Desktop"` (po restarcie limit się resetuje, dalej działa stabilnie)
+- Postgres port 55432 → bez kolizji na Macu (brak natywnego PG). Mapowanie z `docker-compose.yml` zostawione (zgodność z PC)
+- `npm install` 1596 paczek, 0 errorów (31 vulnerabilities — dev-only)
+- Migracje + 3 auto-seedy (`initial-data-seed`, `seed-test-catalog-data`, `seed-wiring-equipment`) zielone
+- Ręczne seedy: `npx medusa exec ./src/scripts/setup-poland-region.ts` (EUR→PLN, country PL, VAT 23%) + `seed-demo-hooks.ts` (4 marki + 4 opublikowane haki)
+- **Publishable key zmienia się per fresh seed!** `initial-data-seed.ts` generuje losowy `pk_...` zapisany w tabeli `api_key`. Po seedzie wyciągnij i podmień w `apps/storefront/.env.local`:
+  ```bash
+  docker exec zahakowani-postgres psql -U zahakowani -d zahakowani -t -c "SELECT token FROM api_key WHERE type='publishable' LIMIT 1;"
+  ```
+  Aktualny (na Macu po sesji 5): `pk_2e21e32935c665c0b4490c4966556884888db70b2c661c9255333a83fb8ad046`. **Inny niż na PC** — to OK, każda baza ma swój. `setup-laptop.md` warto uzupełnić o ten krok
+- Backend `:9000/health` = OK, `/app` = 200, `/store/regions` z publishable key zwraca Polska/PLN ✓
+- Storefront `:8000/` = 200 ✓
+
 **🔥 NASTĘPNA SESJA — iteracja 5: VehicleSelectorHero**
 
 Najgrubsza iteracja Fazy 3B — kaskadowa wyszukiwarka **Brand → Model → Generation** w hero strony głównej. Po wyborze 3 poziomów redirect do `/szukaj?vehicle_id=...`. Brief #3 §6, §5, §11.
@@ -83,7 +115,7 @@ Najgrubsza iteracja Fazy 3B — kaskadowa wyszukiwarka **Brand → Model → Gen
 
 **Decyzje wciąż OPEN (user, nie blokują):**
 - Domena (zahakowani.pl czy nowa) — przed Fazą 5
-- Design tokens z Figmy → podmiana w `tailwind.config.ts` (aktualnie placeholder MD3 indigo)
+- Design tokens z Figmy: **primary = Blue z Figmy (800/900) ✅ zrobione w iter 7 LEAN.** Reszta palety (secondary/accent/success/error) wciąż MD3 placeholder — podmienimy gdy zaczniemy używać konkretnych shade'ów w komponentach
 - Logo SVG (głowa zwierzęcia + napis ZAHAKOWANI ze starej strony WP) — gdy user dostarczy, refaktor do `<Logo />` shared component (Header + Footer + MobileMenu używają)
 
 **Kamień milowy Fazy 1 osiągnięty:** `npx medusa exec ./src/scripts/test-workflows.ts` tworzy 3 produkty (Hak Skoda Octavia 3 z 5 wariantami, Bagażnik testowy z 1, Moduł uniwersalny z 1) widoczne w `/app`.
