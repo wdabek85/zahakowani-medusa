@@ -7,6 +7,7 @@ import {
   Label,
 } from "@/components/ui"
 import { ProductCard, type ProductCardProduct } from "@/components/product"
+import { HeroSection } from "@/components/hero"
 
 const PRODUCT_CARD_DEMO: ProductCardProduct[] = [
   {
@@ -60,16 +61,19 @@ export default function HomePage() {
   const backendUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL ?? "http://localhost:9000"
 
   return (
-    <div className="py-12">
-      <Container size="narrow" className="space-y-12">
+    <>
+      <HeroSection />
+
+      <div className="py-12">
+        <Container size="narrow" className="space-y-12">
         <header>
-          <Badge variant="primary" className="mb-2">Faza 3 · Iteracja 2</Badge>
+          <Badge variant="primary" className="mb-2">Faza 3 · Iteracja 5 + 7 LEAN</Badge>
           <h1 className="text-display-md font-bold text-secondary-900">
             zahakowani — storefront
           </h1>
           <p className="mt-3 text-lg text-secondary-600">
-            Atomy UI zainstalowane: <code className="rounded bg-secondary-100 px-1.5 py-0.5 text-sm">@/components/ui</code>.
-            Strona główna w iteracji 6 (Faza 3B).
+            VehicleSelectorHero podpięty do bazy (Brand→Model→Generation).
+            Atomy UI: <code className="rounded bg-secondary-100 px-1.5 py-0.5 text-sm">@/components/ui</code>.
           </p>
         </header>
 
@@ -173,7 +177,8 @@ export default function HomePage() {
             Następna iteracja: <span className="font-medium text-secondary-700">5 — VehicleSelectorHero</span>.
           </p>
         </footer>
-      </Container>
-    </div>
+        </Container>
+      </div>
+    </>
   )
 }
