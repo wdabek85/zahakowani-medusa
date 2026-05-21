@@ -16,7 +16,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 
 ---
 
-## Status projektu (2026-05-20, koniec sesji 5 — iter 5 VehicleSelectorHero + 7 LEAN ProductCard)
+## Status projektu (2026-05-21, koniec sesji 5 — iter 5 VehicleSelectorHero + 7 LEAN ProductCard + CTA Registry)
 
 | Etap | Stan |
 |---|---|
@@ -132,6 +132,13 @@ Najgrubsza iteracja Fazy 3B zamknięta. Setup data layer + dwa nowe komponenty +
 - `GET /` → 200, HTML zawiera headline + 3 step labels + "SZUKAJ" + "Sprawdź ofertę"
 - Submit selektora: `GET /szukaj?vehicle_id=01KS2EXJ6YMKZREVF06TSFRP78` (realny `generation.id` z bazy) → 404 oczekiwane bo strona `/szukaj` w iteracji 11+
 
+**CTA Registry (sesja 5, 2026-05-21, commit `70294c2`):**
+
+- Dodany `docs/cta-registry.md` — centralna tabela wszystkich linków/CTA wymagających podpięcia (target / page / action). 7 sekcji (Hero, Header, SubNav, MobileMenu, Footer, ProductCard, "Decyzje czekające"), ~15 wpisów ze statusami DONE / TBD-page / TBD-target / TBD-action
+- Konwencja `// TODO(wiring): ...` w kodzie — grepowalna (`grep -rn "TODO(wiring)" apps/storefront/src/`). 7 tagów aktualnie wstawionych: hero-section, vehicle-selector, header, sub-nav, mobile-menu, footer, product-card
+- Konwencja udokumentowana w CLAUDE.md sekcji "Konwencje pracy" → "CTA / Link Registry"
+- **Aktualna decyzja OPEN dla usera (jedyna TBD-target):** target dla "Sprawdź ofertę" w HeroSection — propozycje w rejestrze: `/szukaj` (obecny placeholder) vs `/sklep` vs konkretna kategoria vs `/oferta` strona promocyjna
+
 **🔥 NASTĘPNA SESJA — iteracja 6:**
 
 BrandsSection (logo 8 marek pod hero, brief §6 FEATURED_BRANDS) + pozostałe sekcje strony głównej powyżej "Polecane produkty". Brief #3 §6.
@@ -139,6 +146,53 @@ BrandsSection (logo 8 marek pod hero, brief §6 FEATURED_BRANDS) + pozostałe se
 **Decyzje OPEN do follow-up:**
 - Hero background photo (Figma node `imgRozmiarDesktop` = kierownica/auto z prawej) — user dostarczy assets w późniejszej iteracji
 - Copy hero (headline + CTA) — moja propozycja PL, do akceptacji w review
+- Target dla "Sprawdź ofertę" w hero — szczegóły w `docs/cta-registry.md` sekcja "Decyzje czekające"
+
+---
+
+## Stan przy końcu sesji 5 (Mac M4, 2026-05-21)
+
+**Wszystkie commity wypchnięte do `origin/main`** — working tree czysty. Commity sesji 5 (chronologicznie):
+- `beb9545` iter 7 LEAN ProductCard
+- `2a178d7` CLAUDE.md po iter 7 LEAN
+- `d354b50` iter 5 VehicleSelectorHero
+- `cffa46e` CLAUDE.md po iter 5
+- `70294c2` CTA Registry + konwencja TODO(wiring)
+
+**Co było uruchomione w trakcie sesji (procesy w tle harness CC):**
+- Postgres + Redis przez `docker compose up -d` (kontener `zahakowani-postgres`, `zahakowani-redis`)
+- Medusa backend `npm run dev` w `apps/medusa/` na `:9000` (task harness `bdxaaxxbd`)
+- Storefront Next.js `npm run dev` w `apps/storefront/` na `:8000` (task harness `bp12n645z`)
+
+Procesy harness padną po wyłączeniu maszyny — kontenery Dockera **przeżyją** restart Maca (Docker Desktop startuje je automatycznie z `restart: unless-stopped`). Volumes `postgres_data` + `redis_data` zachowują bazę.
+
+**Po restarcie laptopa / wznowieniu pracy (Mac):**
+
+```bash
+# 1. Sprawdź czy Docker Desktop działa (ikonka wieloryba w pasku menu = zielona)
+docker info | grep "Server Version"
+
+# 2. Wystartuj kontenery jeśli zatrzymane
+cd ~/dev/zahakowani-medusa
+docker compose up -d
+docker compose ps   # czekaj na "healthy" dla obu
+
+# 3. Backend Medusy (terminal 1)
+cd apps/medusa && npm run dev
+# Server is ready on port: 9000
+
+# 4. Storefront (terminal 2)
+cd apps/storefront && npm run dev
+# Ready on http://localhost:8000
+
+# 5. Smoke (terminal 3)
+curl http://localhost:9000/health   # OK
+curl -I http://localhost:8000/      # 200
+```
+
+Bazę odbudowywać NIE trzeba — wolumeny Docker zachowują stan. Publishable key w `.env.local` pozostaje ważny dopóki nie zrobisz fresh seed (`db:reset`).
+
+**Pełna instrukcja Mac (świeży komputer):** `docs/setup-laptop.md` (Windows wariant, ale dla Maca tylko ścieżki się różnią: `~/dev/...` zamiast `E:\`).
 
 **Decyzje wciąż OPEN (user, nie blokują):**
 - Domena (zahakowani.pl czy nowa) — przed Fazą 5
