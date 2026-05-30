@@ -16,7 +16,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 
 ---
 
-## Status projektu (2026-05-21, koniec sesji 5 — iter 5 VehicleSelectorHero + 7 LEAN ProductCard + CTA Registry)
+## Status projektu (2026-05-30, sesja 6 — strona główna domknięta: PopularProducts + Brands + Guides + Blog, cleanup page.tsx)
 
 | Etap | Stan |
 |---|---|
@@ -24,7 +24,7 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 | Etap 0.1 — setup monorepo + Docker + GitHub | ✅ zamknięty |
 | **Faza 1 — backend Medusy (brief #1)** | ✅ **ZAKOŃCZONA** |
 | **Faza 2 — Admin UI (brief #2)** | ✅ **ZAKOŃCZONA** |
-| **Faza 3 — Frontend Next.js (brief #3 gotowy)** | ⏳ **TERAZ — 5/31 + 7 LEAN out-of-order** |
+| **Faza 3 — Frontend Next.js (brief #3 gotowy)** | ⏳ **TERAZ — strona główna praktycznie gotowa (10/31), zostaje WhyUs** |
 | Faza 4 — Integracje (płatności, kurier, faktury) | 🔒 |
 | Faza 5 — Content, SEO, launch | 🔒 |
 | Faza 6 — V1 (priorytet 1: B2B portal z progami rabatowymi) | 🔒 |
@@ -40,9 +40,32 @@ Jesteś Claude Code wspierającym usera w budowie sklepu **Zahakowani** — migr
 | 4 | Nav 3-warstwowa: InfoBar + Header + SubNav + MobileMenu (drawer) | `5e4a77c` | ✅ + fix container 1440px/80px padding (`16ad52b`) |
 | 4.1 | Footer 5-kolumnowy + bottom bar (wzór WP, brak Figmy footera) | `3a2350e` | ✅ + fix grid 5 równych kolumn (`09d89e8`) |
 | **5** | **VehicleSelectorHero + HeroSection (Figma 407:1330 + 407:1435), Medusa client + TanStack Query setup** | `d354b50` | ✅ |
-| 6 | BrandsSection / pozostałe sekcje home (poniżej hero) | — | ⬜ NASTĘPNA |
 | **7 LEAN** | **ProductCard kompaktowy (Figma 405:1311) — out-of-order, bez Medusa wiring** | `beb9545` | ✅ Visual layer + props; data wiring odłożony do iter 7-full |
-| 8-31 | Listingi + PDP + checkout + cleanup (brief §18) | — | ⬜ |
+| **8** | **PopularProductsSection "Najczęściej Przeglądane i Kupowane" (Figma 413:1548) — realne dane z `/store/products`** | `aa7e1ec` + fix `1c1b9ba` | ✅ |
+| **9** | **BrandsSection "Sekcja Modele" (Figma 414:1474) — 9 marek `FEATURED_BRANDS`** | `43fc8ad` | ✅ |
+| **10a** | **BlogSection "Najpopularniejsze artykuły" (Figma 414:1569) — 3 karty, mock** | `9806b5a` | ✅ |
+| **10b** | **GuidesSection "Poradniki" (Figma 414:1518) — 4 kompaktowe karty, mock** | `af3b953` + fix `b0d3ffe` | ✅ |
+| **11 (część)** | **Cleanup `page.tsx` — usunięty dev-showcase z iter 2, czysta kompozycja 5 sekcji** | (ta sesja) | ✅ |
+| 10 WhyUs | **WhyUsSection "Dlaczego my" (brief §6.7)** — czeka na projekt Figma | — | ⬜ ZOSTAJE |
+| 11 navbar | VehicleSelectorNavbar w Headerze (brief §6.2) — kompaktowy, ze stanem pojazdu | — | ⬜ |
+| 12-31 | Listingi + PDP + checkout + cleanup (brief §18) | — | ⬜ |
+
+**Sesja 6 (2026-05-30) — strona główna domknięta contentowo:**
+
+Dobudowane 4 sekcje home pod hero + sprzątnięty `page.tsx`. Wszystkie odwzorowane z Figmy (master `bFOpp42bkgVtsOlzH3CSbb`), trzymają **site-wide konwencję szerokości**: `mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-20` (16/32/80px — jak Header/Hero/Footer).
+
+- `components/home/popular-products-section.tsx` (Server) — grid 2/4 kol., reużywa `ProductCard` (`className="w-full"`). Dane z `lib/medusa/products.ts` → `getPopularProducts()`: resolve regionu PLN + `/store/products?order=-created_at`, **filtr cen PLN** (odrzuca 4 sample Medusy bez ceny pln), overfetch ×2, graceful `[]` gdy backend padnie. MVP proxy popularności = ostatnio dodane.
+- `components/home/brands-section.tsx` (Server) — 9 chipów z `FEATURED_BRANDS` (constants.ts, `{label, slug}`), hover → primary-800. Link `/haki?marka={slug}`.
+- `components/home/guides-section.tsx` (Server) — "Poradniki": nagłówek + "Zobacz więcej >", 4 **poziome** karty (miniatura 160×86 + tytuł), bez excerptu. Mock.
+- `components/home/blog-section.tsx` (Server) — "Najpopularniejsze artykuły": 3 **pełne** karty (obraz + autor|data + tytuł + excerpt + "Czytaj więcej"). Mock.
+- `page.tsx` — **usunięty dev-showcase z iter 2** (Buttony/Form/Badge demo + stopka). Czysta kompozycja: Hero → Popular → Brands → Guides → Blog.
+- `components/home/index.ts` — barrel (4 sekcje).
+- **Dane Guides/Blog = mockowe** (placeholder copy o hakach) — realne wjadą z **Sanity (Faza 5)**. Copy w Figmie było placeholderem z innego template'u (stacje narciarskie/Berg POS).
+- `docs/cta-registry.md` rozszerzony o wpisy: Brands → `/haki?marka=`, Guides/Blog → `/poradniki/{slug}` + `/poradniki` (wszystkie TBD-page).
+
+**Co ZOSTAŁO na home:** `WhyUsSection` "Dlaczego my" (brief §6.7, 4 karty z ikonami) — **brak projektu w Figmie**, user dostarczy później. `VehicleSelectorNavbar` w Headerze (brief §6.2) — odłożony, pasuje do etapu listingów/wyszukiwania (potrzebuje stanu wybranego pojazdu).
+
+**Kolejność sekcji home (page.tsx):** `Hero → PopularProducts → Brands → Guides → Blog`.
 
 **Iteracja 3 LEAN — co zrobione (sesja 4, 2026-05-19, commit `6780e79`):**
 - `apps/storefront/src/lib/utils/constants.ts` — SITE_NAME, PHONE/PHONE_HREF, EMAIL/EMAIL_HREF, ADDRESS_STREET, ADDRESS_CITY, LOCATION, BUSINESS_HOURS, COMPANY_TAGLINE, FREE_SHIPPING_THRESHOLD_PLN
