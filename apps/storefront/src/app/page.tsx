@@ -7,7 +7,12 @@ import {
   Label,
 } from "@/components/ui"
 import { HeroSection } from "@/components/hero"
-import { BlogSection, BrandsSection, PopularProductsSection } from "@/components/home"
+import {
+  BlogSection,
+  BrandsSection,
+  GuidesSection,
+  PopularProductsSection,
+} from "@/components/home"
 
 /**
  * Iteracje 2-4 placeholder/showcase.
@@ -28,6 +33,8 @@ export default function HomePage() {
       <PopularProductsSection />
 
       <BrandsSection />
+
+      <GuidesSection />
 
       <BlogSection />
 

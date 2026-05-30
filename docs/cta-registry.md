@@ -71,6 +71,14 @@ Linki `mailto:` / `tel:` / external (Google Fonts, admin Medusy) są **pominięt
 
 ---
 
+## GuidesSection (`components/home/guides-section.tsx`)
+
+| Lokalizacja | Tekst CTA | Obecny target | Status | Notatka |
+|---|---|---|---|---|
+| `guides-section.tsx` (4 karty `GUIDES`) | Karta poradnika "Poradniki" | `/poradniki/{slug}` | TBD-page | Poradniki z Sanity (Faza 5). Dane mockowe. Osobna sekcja od BlogSection (prostsze karty bez autora/daty) |
+
+---
+
 ## BlogSection (`components/home/blog-section.tsx`)
 
 | Lokalizacja | Tekst CTA | Obecny target | Status | Notatka |
