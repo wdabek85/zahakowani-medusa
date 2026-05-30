@@ -75,7 +75,8 @@ Linki `mailto:` / `tel:` / external (Google Fonts, admin Medusy) są **pominięt
 
 | Lokalizacja | Tekst CTA | Obecny target | Status | Notatka |
 |---|---|---|---|---|
-| `guides-section.tsx` (4 karty `GUIDES`) | Karta poradnika "Poradniki" | `/poradniki/{slug}` | TBD-page | Poradniki z Sanity (Faza 5). Dane mockowe. Osobna sekcja od BlogSection (prostsze karty bez autora/daty) |
+| `guides-section.tsx` nagłówek | **Zobacz więcej** | `/poradniki` | TBD-page | Listing poradników (Faza 5 / Sanity) |
+| `guides-section.tsx` (4 karty `GUIDES`) | Karta poradnika (pozioma, miniatura + tytuł) | `/poradniki/{slug}` | TBD-page | Poradniki z Sanity (Faza 5). Dane mockowe. Osobna sekcja od BlogSection (kompaktowe karty bez autora/daty/excerptu) |
 
 ---
 
