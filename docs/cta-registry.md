@@ -63,6 +63,14 @@ Linki `mailto:` / `tel:` / external (Google Fonts, admin Medusy) są **pominięt
 
 ---
 
+## BrandsSection (`components/home/brands-section.tsx` + `FEATURED_BRANDS`)
+
+| Lokalizacja | Tekst CTA | Obecny target | Status | Notatka |
+|---|---|---|---|---|
+| `brands-section.tsx` (mapowane z `FEATURED_BRANDS`) | 9 chipów marek (VW, Renault, Fiat, Mercedes, Ford, Peugeot, Nissan, Honda, BMW) | `/haki?marka={slug}` | TBD-page | Listing `/haki` z filtrem marki w query. Strona w iter 12 (listingi kategorii) |
+
+---
+
 ## ProductCard (`components/product/product-card.tsx`)
 
 | Lokalizacja | Tekst CTA | Obecny target | Status | Notatka |

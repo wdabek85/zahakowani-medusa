@@ -33,3 +33,26 @@ export const COMPANY_TAGLINE =
 // Logistyka
 // TODO V1: przenieść do konfiguracji w admin (Faza 5/6)
 export const FREE_SHIPPING_THRESHOLD_PLN = 450
+
+/**
+ * Wyróżnione marki na stronie głównej (sekcja "Modele", Figma 414:1474).
+ * Kolejność i lista wg projektu Figmy. `slug` trafia do `/haki?marka={slug}`.
+ *
+ * TODO V1: wybór automatyczny po liczbie produktów per marka (brief §6.5).
+ */
+export interface FeaturedBrand {
+  label: string
+  slug: string
+}
+
+export const FEATURED_BRANDS: readonly FeaturedBrand[] = [
+  { label: "VW", slug: "volkswagen" },
+  { label: "RENAULT", slug: "renault" },
+  { label: "FIAT", slug: "fiat" },
+  { label: "MERCEDES", slug: "mercedes" },
+  { label: "FORD", slug: "ford" },
+  { label: "PEUGEOT", slug: "peugeot" },
+  { label: "NISSAN", slug: "nissan" },
+  { label: "HONDA", slug: "honda" },
+  { label: "BMW", slug: "bmw" },
+] as const
