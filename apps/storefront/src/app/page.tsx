@@ -7,7 +7,7 @@ import {
   Label,
 } from "@/components/ui"
 import { HeroSection } from "@/components/hero"
-import { BrandsSection, PopularProductsSection } from "@/components/home"
+import { BlogSection, BrandsSection, PopularProductsSection } from "@/components/home"
 
 /**
  * Iteracje 2-4 placeholder/showcase.
@@ -28,6 +28,8 @@ export default function HomePage() {
       <PopularProductsSection />
 
       <BrandsSection />
+
+      <BlogSection />
 
       <div className="py-12">
         <Container size="narrow" className="space-y-12">
@@ -126,7 +128,7 @@ export default function HomePage() {
             </a>
           </p>
           <p className="mt-1">
-            Następna iteracja: <span className="font-medium text-secondary-700">10 — GuidesSection + WhyUsSection</span>.
+            Następna iteracja: <span className="font-medium text-secondary-700">10 — WhyUsSection (+ composition page.tsx)</span>.
           </p>
         </footer>
         </Container>

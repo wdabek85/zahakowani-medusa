@@ -71,6 +71,14 @@ Linki `mailto:` / `tel:` / external (Google Fonts, admin Medusy) są **pominięt
 
 ---
 
+## BlogSection (`components/home/blog-section.tsx`)
+
+| Lokalizacja | Tekst CTA | Obecny target | Status | Notatka |
+|---|---|---|---|---|
+| `blog-section.tsx` (3 karty `ARTICLES` + "Czytaj więcej") | Karta artykułu / "Czytaj więcej >" | `/poradniki/{slug}` | TBD-page | Strona artykułu z Sanity (Faza 5). Dane obecnie mockowe (placeholder copy o hakach). Link `/poradniki` z Headera/MobileMenu też tu celuje |
+
+---
+
 ## ProductCard (`components/product/product-card.tsx`)
 
 | Lokalizacja | Tekst CTA | Obecny target | Status | Notatka |
